@@ -1,5 +1,7 @@
 {
   "name": "ITSMIMBA",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
