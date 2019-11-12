@@ -1,6 +1,8 @@
 import { Currency } from './currency';
 
 export class Amount {
-    currency: Currency;
-    value: number; // If positive, the amount is credited. Otherwise, it is debited.
+  constructor(
+    public currency: Currency,
+    public value: number // If positive, the amount is debited. Otherwise, it is credited.
+  ) {}
 }

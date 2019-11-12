@@ -12,23 +12,17 @@ import { Occurrence } from '../enums/occurrence.enum';
   providedIn: 'root'
 })
 export class UserDataService {
-  constructor() { }
+  constructor() {}
 
   // TODO
   public get_accounts(): Account[] {
     const dummyDate = new Date();
-    const dolUSD: Currency = { code: FiatCode.USD, isFiat: true };
-    const dummyAmount: Amount = { currency: dolUSD, value: 12 };
-    const dummyPayment: Payment = { id: 1,
-                                  label: 'test',
-                                  amount: dummyAmount,
-                                  startDate: dummyDate,
-                                  howMany: 2, // -1 if it never stops
-                                  factor: 2,
-                                  occurrence: Occurrence.Monthly };
-    const dummyTransaction: Transaction = { id: 1, amount: dummyAmount, date: dummyDate, relevantValue: 12 };
+    const dolUSD = new Currency(FiatCode.USD, true);
+    const dummyAmount = new Amount(dolUSD, 12);
+    const dummyPayment = new Payment(1, 'test', dummyAmount, dummyDate, 2, 2, Occurrence.Monthly);
+    const dummyTransaction = new Transaction(1, dummyDate, dummyAmount, 12);
 
-    const dummyMain: Account = { activePayments: [dummyPayment], pastTransactions: [dummyTransaction] };
+    const dummyMain = new Account([dummyPayment], [dummyTransaction]);
 
     return [dummyMain];
   }

@@ -7,11 +7,13 @@ import { Occurrence } from '../enums/occurrence.enum';
 // - If a payment started on the 29th/30th/31st and the current month is shorter,
 //   the payment will happen on the last day of the month
 export class Payment {
-    id: number;
-    label: string;
-    amount: Amount;
-    startDate: Date;
-    howMany: number; // -1 if it never stops
-    factor: number;
-    occurrence: Occurrence;
+  constructor(
+    public id: number,
+    public label: string,
+    public amount: Amount,
+    public startDate: Date,
+    public howMany: number, // -1 if it never stops
+    public factor: number,
+    public occurrence: Occurrence
+  ) {}
 }
