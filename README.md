@@ -1,6 +1,6 @@
 # ITSMIMBA?
 
-![Frameworks](https://img.shields.io/badge/frameworks-ionic%20+%20angular%20+%20cordova-blue)
+![Frameworks](https://img.shields.io/badge/frameworks-ionic%20+%20angular%20+%20capacitor-blue)
 ![Android](https://img.shields.io/badge/android-green)
 ![iOS](https://img.shields.io/badge/iOS-lightgrey)
 ![License](https://img.shields.io/badge/license-AGPLv3-red)
