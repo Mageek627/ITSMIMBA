@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
-import { Account } from '../../interfaces/account';
-import { UserDataService } from '../../services/user-data.service';
+import { Account } from '../../models/account';
+import { UserDataService } from '../../providers/user-data.service';
 
 @Component({
   selector: 'app-home',
