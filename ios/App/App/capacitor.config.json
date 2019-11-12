@@ -1,8 +1,0 @@
-{
-  "appId": "com.khouryalexandre.itsmimba",
-  "appName": "ITSMIMBA",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www",
-  "cordova": {}
-}
