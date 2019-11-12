@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.khouryalexandre.itsmimba;
 
 import android.os.Bundle;
 
