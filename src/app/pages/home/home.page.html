@@ -11,6 +11,9 @@
 
 <ion-content>
   <div class="ion-padding">
-  Hello
+    <p>Hello, here are your payments:</p>
+    <ul>
+      <li *ngFor="let account of dummyAccounts" >{{ account.active_payments[0].id }}</li>
+    </ul>
   </div>
 </ion-content>

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 
+import { Account } from '../../interfaces/account';
+import { UserDataService } from '../../services/user-data.service';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -7,6 +10,10 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
 
-  constructor() {}
+  public dummyAccounts: Account[];
+
+  constructor(private userData: UserDataService) {
+    this.dummyAccounts = userData.get_accounts();
+  }
 
 }
