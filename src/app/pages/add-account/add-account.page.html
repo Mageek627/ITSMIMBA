@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="centered-title">
+      Add account
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label>Name:</ion-label>
+    <ion-input id="name"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Currency:</ion-label>
+    <ion-select placeholder="Select" >
+      <ion-select-option *ngFor="let code of codes" [value]="code">{{ code }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-button routerLink="/accounts" routerDirection="back" >Add</ion-button>
+</ion-content>

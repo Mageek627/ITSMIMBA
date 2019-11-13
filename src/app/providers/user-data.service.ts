@@ -22,7 +22,7 @@ export class UserDataService {
     const dummyPayment = new Payment(1, 'test', dummyAmount, dummyDate, 2, 2, Occurrence.Monthly);
     const dummyTransaction = new Transaction(1, dummyDate, dummyAmount, 12);
 
-    const dummyMain = new Account([dummyPayment], [dummyTransaction]);
+    const dummyMain = new Account('main', dolUSD, [dummyPayment], [dummyTransaction]);
 
     return [dummyMain];
   }
