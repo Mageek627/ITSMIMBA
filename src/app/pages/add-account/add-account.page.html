@@ -12,13 +12,26 @@
 <ion-content class="ion-padding">
   <ion-item>
     <ion-label>Name:</ion-label>
-    <ion-input id="name"></ion-input>
+    <ion-input [(ngModel)]="nameOfAccount"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label>Currency:</ion-label>
-    <ion-select placeholder="Select" >
-      <ion-select-option *ngFor="let code of codes" [value]="code">{{ code }}</ion-select-option>
+    <ion-label>Type:</ion-label>
+    <ion-select [(ngModel)]="currencyType" placeholder="Select">
+      <ion-select-option value="fiat">Fiat money</ion-select-option>
+      <ion-select-option value="crypto">Cryptocurrency</ion-select-option>
     </ion-select>
   </ion-item>
-  <ion-button routerLink="/accounts" routerDirection="back" >Add</ion-button>
+  <ion-item *ngIf='currencyType=="fiat"'>
+    <ion-label>Currency:</ion-label>
+    <ion-select placeholder="Select">
+      <ion-select-option *ngFor="let code of fiatCurrencies | keyvalue" [value]="code.key">{{ code.key }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf='currencyType=="crypto"'>
+    <ion-label>Currency:</ion-label>
+    <ion-select placeholder="Select">
+      <ion-select-option *ngFor="let code of cryptoCurrencies" [value]="code.symbol">{{ code.symbol | uppercase }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-button (click)='add_account()'>Add</ion-button>
 </ion-content>

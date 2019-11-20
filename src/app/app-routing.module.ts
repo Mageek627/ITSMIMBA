@@ -14,7 +14,7 @@ const routes: Routes = [
       import('./pages/accounts/accounts.module').then(m => m.AccountsPageModule)
   },
   {
-    path: 'account-overview',
+    path: 'account-overview/:accountId',
     loadChildren: () =>
       import('./pages/account-overview/account-overview.module').then(
         m => m.AccountOverviewPageModule

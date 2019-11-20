@@ -1,19 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import { Account } from '../../models/account';
 import { UserDataService } from '../../providers/user-data.service';
+import { CurrenciesService } from 'src/app/providers/currencies.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  styleUrls: ['home.page.scss']
 })
-export class HomePage {
-
-  public dummyAccounts: Account[];
-
-  constructor(private userData: UserDataService) {
-    this.dummyAccounts = userData.get_accounts();
+export class HomePage implements OnInit {
+  constructor(
+    private userData: UserDataService,
+    private currencies: CurrenciesService
+  ) {
+    userData.create_dummy_accounts();
   }
 
+  ngOnInit() {}
 }

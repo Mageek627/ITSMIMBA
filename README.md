@@ -5,7 +5,11 @@
 ![iOS](https://img.shields.io/badge/iOS-lightgrey)
 ![License](https://img.shields.io/badge/license-AGPLv3-red)
 
-Is There Sufficient Money In My Bank Account? An open source mobile app to help pay bills in time.
+Is There Sufficient Money In My Bank Account? An open source mobile app to help pay bills on time.
+
+## Introduction
+
+TODO
 
 ## Installation
 
