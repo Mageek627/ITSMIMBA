@@ -1,6 +1,7 @@
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
-  <ion-menu contentId="main-content" menuId="main-menu" type="overlay">
+  <ion-menu contentId="main-content" menuId="main-menu" type="overlay" (ionWillOpen)="menuWillOpen()"
+    (ionWillClose)="menuWillClose()" (ionDidOpen)="menuDidOpen()" (ionDidClose)="menuDidClose()">
     <ion-header>
       <ion-toolbar>
         <ion-title>Menu</ion-title>

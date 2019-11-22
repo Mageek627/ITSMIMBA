@@ -1,5 +1,5 @@
 export enum Occurrence {
-    Daily,
-    Monthly,
-    Yearly
+  Daily,
+  Monthly,
+  Yearly
 }

@@ -1,8 +1,8 @@
 // TODO
 export enum CryptoCode {
-    BTC,
-    ETH,
-    LTC,
-    NANO,
-    QRL
+  BTC,
+  ETH,
+  LTC,
+  NANO,
+  QRL
 }

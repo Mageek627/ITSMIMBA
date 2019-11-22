@@ -1,7 +1,7 @@
 // TODO
 export enum FiatCode {
-    USD,
-    EUR,
-    LBP,
-    CAD
+  USD,
+  EUR,
+  LBP,
+  CAD
 }

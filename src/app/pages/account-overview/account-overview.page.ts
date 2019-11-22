@@ -11,6 +11,7 @@ export class AccountOverviewPage implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute) {
     this.activatedRoute.params.subscribe(params => {
+      // Getting value from url parameter
       this.accountId = Number(params.accountId);
     });
   }
