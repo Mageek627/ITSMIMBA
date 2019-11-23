@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 
 import { UserDataService } from './providers/user-data.service';
 import { CurrenciesService } from './providers/currencies.service';
+import { StorageUtils } from './utils/storage-utils';
+import { Keys } from 'src/data/keys';
 
 @Component({
   selector: 'app-root',
@@ -25,10 +27,22 @@ export class AppComponent implements OnInit {
     private currencies: CurrenciesService
   ) {
     userData.create_dummy_accounts();
+    this.initialize();
   }
 
   ngOnInit() {
     Plugins.App.addListener('backButton', () => this.reactBackButton(this));
+  }
+
+  private async initialize() {
+    const firstTime = await StorageUtils.get(Keys.FIRST_TIME);
+    // If we never opened the app
+    if (firstTime === null || Boolean(firstTime)) {
+      await this.currencies.saveJSONLocal();
+      await StorageUtils.set(Keys.FIRST_TIME, false);
+    } else {
+      await this.currencies.loadLocal();
+    }
   }
 
   private reactBackButton(ctx: any) {
