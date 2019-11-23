@@ -21,17 +21,25 @@
       <ion-select-option value="crypto">Cryptocurrency</ion-select-option>
     </ion-select>
   </ion-item>
-  <ion-item *ngIf='currencyType=="fiat"'>
-    <ion-label>Currency:</ion-label>
-    <ion-select placeholder="Select">
-      <ion-select-option *ngFor="let code of fiatCurrencies | keyvalue" [value]="code.key">{{ code.key }}</ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-item *ngIf='currencyType=="crypto"'>
-    <ion-label>Currency:</ion-label>
-    <ion-select placeholder="Select">
-      <ion-select-option *ngFor="let code of cryptoCurrencies" [value]="code.symbol">{{ code.symbol | uppercase }}</ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-button (click)='add_account()'>Add</ion-button>
+  <div *ngIf='currencyType!=="none"'>
+    <ion-item *ngIf='currencyType=="fiat"'>
+      <ion-label>Currency:</ion-label>
+      <ion-select placeholder="Select" [(ngModel)]="fiatChoice">
+        <ion-select-option *ngFor="let code of fiatCurrencies | keyvalue" [value]="code.key">{{ code.key }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf='currencyType=="crypto"'>
+      <ion-label>Currency:</ion-label>
+      <ion-select placeholder="Select" [(ngModel)]="cryptoChoice">
+        <ion-select-option *ngFor="let code of cryptoCurrencies" [value]="code.symbol">{{ code.symbol | uppercase }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Current value:</ion-label>
+      <ion-input class="ion-text-end" pattern="-?[0-9]*(,|\.)?[0-9]*" [(ngModel)]="valueOfAccount"></ion-input>
+    </ion-item>
+  </div>
+  <ion-button [disabled]="verifyForm()" (click)='add_account()'>Add</ion-button>
 </ion-content>

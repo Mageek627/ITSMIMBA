@@ -16,6 +16,9 @@ export class AddAccountPage implements OnInit {
   public cryptoCurrencies;
   public currencyType = 'none';
   public nameOfAccount;
+  public valueOfAccount;
+  public cryptoChoice = '';
+  public fiatChoice = '';
 
   constructor(
     private currencies: CurrenciesService,
@@ -39,5 +42,18 @@ export class AddAccountPage implements OnInit {
       this.UserData.add_account(this.nameOfAccount, tempCurr);
     }
     this.navCtrl.pop();
+  }
+  verifyForm() {
+    // TODO:
+    // - Proper form validation
+    if (
+      this.valueOfAccount !== '' &&
+      this.nameOfAccount !== '' &&
+      (this.cryptoChoice !== '' || this.fiatChoice !== '')
+    ) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
