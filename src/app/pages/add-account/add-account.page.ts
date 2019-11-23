@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UserDataService } from 'src/app/providers/user-data.service';
 import { CurrenciesService } from 'src/app/providers/currencies.service';
-import { FiatCode } from 'src/app/enums/fiat-code.enum';
 import { Currency } from 'src/app/models/currency';
-import { CryptoCode } from 'src/app/enums/crypto-code.enum';
 import { NavController } from '@ionic/angular';
+import { CurrencyType } from 'src/app/enums/currency-type.enum';
 
 @Component({
   selector: 'app-add-account',
@@ -25,20 +24,20 @@ export class AddAccountPage implements OnInit {
     private UserData: UserDataService,
     private navCtrl: NavController
   ) {
-    // TODO
     this.fiatCurrencies = currencies.get_fiat_currencies().rates;
     this.cryptoCurrencies = currencies.get_crypto_currencies();
   }
 
   ngOnInit() {}
 
-  // TODO
+  // TODO:
+  // - Save to local
   add_account() {
     if (this.currencyType === 'fiat') {
-      const tempCurr = new Currency(FiatCode.EUR, false);
+      const tempCurr = new Currency('EUR', CurrencyType.Fiat);
       this.UserData.add_account(this.nameOfAccount, tempCurr);
     } else if (this.currencyType === 'crypto') {
-      const tempCurr = new Currency(CryptoCode.BTC, false);
+      const tempCurr = new Currency('BTC', CurrencyType.Crypto);
       this.UserData.add_account(this.nameOfAccount, tempCurr);
     }
     this.navCtrl.pop();

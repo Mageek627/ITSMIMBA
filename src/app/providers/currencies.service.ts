@@ -12,7 +12,6 @@ export class CurrenciesService {
   private cryptoCurrencies: any;
   private fiatCurrencies: any;
 
-  // TODO
   constructor() {}
 
   public async saveJSONLocal(): Promise<void> {

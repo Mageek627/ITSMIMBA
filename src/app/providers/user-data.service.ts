@@ -5,9 +5,8 @@ import { Payment } from '../models/payment';
 import { Amount } from '../models/amount';
 import { Currency } from '../models/currency';
 import { Transaction } from '../models/transaction';
-import { FiatCode } from '../enums/fiat-code.enum';
 import { Occurrence } from '../enums/occurrence.enum';
-import { CryptoCode } from '../enums/crypto-code.enum';
+import { CurrencyType } from '../enums/currency-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +17,10 @@ export class UserDataService {
 
   constructor() {}
 
-  // TODO
   public create_dummy_accounts(): void {
     // const dummyDate = new Date();
-    const dolUSD = new Currency(FiatCode.USD, true);
-    const ETH = new Currency(CryptoCode.ETH, true);
+    const dolUSD = new Currency('USD', CurrencyType.Fiat);
+    const ETH = new Currency('ETH', CurrencyType.Crypto);
     // const dummyAmount = new Amount(dolUSD, 12);
     // const dummyPayment = new Payment(1, 'test', dummyAmount, dummyDate, 2, 2, Occurrence.Monthly);
     // const dummyTransaction = new Transaction(1, dummyDate, dummyAmount, 12);

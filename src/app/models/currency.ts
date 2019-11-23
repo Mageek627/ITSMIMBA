@@ -1,6 +1,5 @@
-import { FiatCode } from '../enums/fiat-code.enum';
-import { CryptoCode } from '../enums/crypto-code.enum';
+import { CurrencyType } from '../enums/currency-type.enum';
 
 export class Currency {
-  constructor(public code: FiatCode | CryptoCode, public isFiat: boolean) {}
+  constructor(public code: string, public currencyType: CurrencyType) {}
 }
