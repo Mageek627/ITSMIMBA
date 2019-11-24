@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuState } from './enums/menu-state.enum';
+import { Router } from '@angular/router';
 import { Plugins } from '@capacitor/core';
 import { MenuController, NavController } from '@ionic/angular';
-import { Router } from '@angular/router';
-
-import { UserDataService } from './providers/user-data.service';
-import { CurrenciesService } from './providers/currencies.service';
-import { StorageUtils } from './utils/storage-utils';
 import { Keys } from 'src/data/keys';
+import { MenuState } from './enums/menu-state.enum';
+import { CurrenciesService } from './providers/currencies.service';
+import { UserDataService } from './providers/user-data.service';
+import { StorageUtils } from './utils/storage-utils';
 
 @Component({
   selector: 'app-root',
@@ -23,10 +22,9 @@ export class AppComponent implements OnInit {
     private router: Router,
     private menuCtrl: MenuController,
     private navCtrl: NavController,
-    private userData: UserDataService,
-    private currencies: CurrenciesService
+    private userDataService: UserDataService,
+    private currenciesService: CurrenciesService
   ) {
-    userData.create_dummy_accounts();
     this.initialize();
   }
 
@@ -37,11 +35,13 @@ export class AppComponent implements OnInit {
   private async initialize() {
     const firstTime = await StorageUtils.get(Keys.FIRST_TIME);
     // If we never opened the app
-    if (firstTime === null || Boolean(firstTime)) {
-      await this.currencies.saveJSONLocal();
+    if (firstTime === null || firstTime === 'true') {
+      await this.currenciesService.saveJSONLocal();
+      await this.userDataService.initDataFirst();
       await StorageUtils.set(Keys.FIRST_TIME, false);
     } else {
-      await this.currencies.loadLocal();
+      await this.currenciesService.loadLocal();
+      await this.userDataService.initData();
     }
   }
 

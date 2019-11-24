@@ -1,6 +1,6 @@
+import { Currency } from './currency';
 import { Payment } from './payment';
 import { Transaction } from './transaction';
-import { Currency } from './currency';
 
 export class Account {
   constructor(

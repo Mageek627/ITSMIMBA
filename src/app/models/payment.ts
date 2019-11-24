@@ -1,5 +1,5 @@
-import { Amount } from './amount';
 import { Occurrence } from '../enums/occurrence.enum';
+import { Amount } from './amount';
 
 // - Example: if factor==2 and occurrence=Monthly, the payment will happen every 2 months
 // - A One-Time payment is encoded as Daily occurrence with factor==1 and how_many==1

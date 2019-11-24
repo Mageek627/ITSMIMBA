@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { UserDataService } from 'src/app/providers/user-data.service';
-
 import { Account } from '../../models/account';
 
 @Component({
@@ -11,11 +10,11 @@ import { Account } from '../../models/account';
 export class AccountsPage implements OnInit {
   public listAccounts: Account[];
 
-  constructor(private userData: UserDataService) {}
+  constructor(private userDataService: UserDataService) {}
 
   ngOnInit() {}
 
   ionViewWillEnter() {
-    this.listAccounts = this.userData.get_accounts();
+    this.listAccounts = this.userDataService.get_accounts();
   }
 }
