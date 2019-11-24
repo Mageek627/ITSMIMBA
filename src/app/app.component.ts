@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Capacitor, Plugins } from '@capacitor/core';
+import { Plugins } from '@capacitor/core';
 import { MenuController, NavController } from '@ionic/angular';
 import { Keys } from 'src/data/keys';
 import { MenuState } from './enums/menu-state.enum';
@@ -15,7 +15,7 @@ import { StorageUtils } from './utils/storage-utils';
 })
 export class AppComponent implements OnInit {
   public menuState = MenuState.isClosed;
-  private listOfRootPages = ['/', '/home'];
+  private listOfRootPages = ['/home'];
   private mainMenuId = 'main-menu';
 
   constructor(
@@ -28,10 +28,17 @@ export class AppComponent implements OnInit {
     this.initialize();
   }
 
+  // TODO:
+  // - Make it more fluid ?
+  public goToFromHome(url: string) {
+    this.navCtrl.navigateRoot('/home').then(() => {
+      this.navCtrl.navigateForward(url, { animated: false });
+    });
+  }
+
   ngOnInit() {
-    if (Capacitor.platform === 'android') {
-      Plugins.App.addListener('backButton', () => this.reactBackButton(this));
-    }
+    // This is for Android only
+    Plugins.App.addListener('backButton', () => this.reactBackButton(this));
   }
 
   private async initialize() {
