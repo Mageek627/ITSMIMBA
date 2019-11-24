@@ -11,8 +11,8 @@
 
 <ion-content class="ion-padding">
   <div *ngIf="listAccounts!==undefined">
-    <div *ngFor="let account of listAccounts">
-      <ion-button [routerLink]="['/account-overview',account.id]" >{{ account.label }} account</ion-button><br />
+    <div *ngFor="let account of listAccounts; index as i">
+      <ion-button [routerLink]="['/account-overview/',i]" >{{ account.name }} account</ion-button><br />
     </div><br />
   </div>
   <ion-button routerLink="/add-account">Add account</ion-button>

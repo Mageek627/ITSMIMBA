@@ -26,6 +26,11 @@ const routes: Routes = [
       import('./pages/add-account/add-account.module').then(
         m => m.AddAccountPageModule
       )
+  },
+  {
+    path: 'settings',
+    loadChildren: () =>
+      import('./pages/settings/settings.module').then(m => m.SettingsPageModule)
   }
 ];
 

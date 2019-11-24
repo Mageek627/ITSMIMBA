@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { UserDataService } from 'src/app/providers/user-data.service';
+import { Account } from '../../models/account';
 
 @Component({
   selector: 'app-account-overview',
@@ -7,12 +9,15 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./account-overview.page.scss']
 })
 export class AccountOverviewPage implements OnInit {
-  public accountId: number;
+  public account: Account;
 
-  constructor(private activatedRoute: ActivatedRoute) {
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private userDataService: UserDataService
+  ) {
     this.activatedRoute.params.subscribe(params => {
       // Getting value from url parameter
-      this.accountId = Number(params.accountId);
+      this.account = userDataService.get_accounts()[Number(params.accountId)];
     });
   }
 

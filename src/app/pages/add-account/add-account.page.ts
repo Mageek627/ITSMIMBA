@@ -31,7 +31,7 @@ export class AddAccountPage implements OnInit {
   ngOnInit() {}
 
   // TODO:
-  // - Save to local
+  // - Save initial transaction
   add_account() {
     if (this.currencyType === 'fiat') {
       const tempCurr = new Currency('EUR', CurrencyType.Fiat);

@@ -1,14 +1,18 @@
 <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <ion-title class="centered-title">
-        Account overview
-      </ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="centered-title">
+      Account overview
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content class="ion-padding">
-  {{ accountId }}
+  {{ account.name }} account, in {{ account.currency.code }}<br /><br /><br />
+  List of transactions:<br />
+  <ul>
+    <li *ngFor="let transaction of account.pastTransactions">{{ transaction.amount.value }} {{transaction.amount.currency.code}} on the {{transaction.date | date: 'longDate' }}</li>
+  </ul>
 </ion-content>

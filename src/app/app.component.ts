@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Plugins } from '@capacitor/core';
+import { Capacitor, Plugins } from '@capacitor/core';
 import { MenuController, NavController } from '@ionic/angular';
 import { Keys } from 'src/data/keys';
 import { MenuState } from './enums/menu-state.enum';
@@ -29,7 +29,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    Plugins.App.addListener('backButton', () => this.reactBackButton(this));
+    if (Capacitor.platform === 'android') {
+      Plugins.App.addListener('backButton', () => this.reactBackButton(this));
+    }
   }
 
   private async initialize() {

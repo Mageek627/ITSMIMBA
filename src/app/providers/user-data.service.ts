@@ -14,7 +14,6 @@ import { StorageUtils } from '../utils/storage-utils';
   providedIn: 'root'
 })
 export class UserDataService {
-  private CURRENT_AVAILABLE_ID: number;
   private userData;
 
   constructor() {}
@@ -33,16 +32,15 @@ export class UserDataService {
       2,
       Occurrence.Monthly
     );
-    const dummyTransaction = new Transaction(1, dummyDate, dummyAmount, 12);
+    const dummyTransaction = new Transaction(dummyDate, dummyAmount, 12);
 
     const dummyMain = new Account(
-      27,
       'Main',
       dolUSD,
       [dummyPayment],
       [dummyTransaction]
     );
-    const dummyMain2 = new Account(14, 'ETH', ETH, [], []);
+    const dummyMain2 = new Account('ETH', ETH, [], []);
     const EUR = new Currency('EUR', CurrencyType.Fiat);
     this.userData.accounts.push(dummyMain, dummyMain2);
     await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
@@ -53,37 +51,19 @@ export class UserDataService {
   }
 
   public async initDataFirst() {
-    console.log(2);
     const EUR = new Currency('EUR', CurrencyType.Fiat);
     const newUser = new UserData([], EUR);
     await StorageUtils.setJSON(Keys.USER_DATA, newUser);
-    await StorageUtils.set(Keys.CURRENT_AVAILABLE_ID, 0);
-    this.CURRENT_AVAILABLE_ID = 0;
     this.userData = newUser;
     await this.create_dummy_accounts();
   }
 
   public async initData() {
-    console.log(1);
-    this.CURRENT_AVAILABLE_ID = Number(
-      await StorageUtils.get(Keys.CURRENT_AVAILABLE_ID)
-    );
     this.userData = await StorageUtils.getJSON(Keys.USER_DATA);
   }
 
   public async add_account(name: string, currency: Currency) {
-    const newAccount = new Account(
-      this.CURRENT_AVAILABLE_ID,
-      name,
-      currency,
-      [],
-      []
-    );
-    await StorageUtils.set(
-      Keys.CURRENT_AVAILABLE_ID,
-      this.CURRENT_AVAILABLE_ID + 1
-    );
-    this.CURRENT_AVAILABLE_ID++;
+    const newAccount = new Account(name, currency, [], []);
     this.userData.accounts.push(newAccount);
     await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
   }
