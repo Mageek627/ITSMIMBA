@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ITSMIMBA</string>
+    <string name="title_activity_main">ITSMIMBA</string>
+    <string name="package_name">com.khouryalexandre.itsmimba</string>
+    <string name="custom_url_scheme">com.khouryalexandre.itsmimba</string>
+</resources>

@@ -1,0 +1,14 @@
+{
+  "appId": "com.khouryalexandre.itsmimba",
+  "appName": "ITSMIMBA",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {},
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "backgroundColor": "#ffffffff"
+    }
+  }
+}
