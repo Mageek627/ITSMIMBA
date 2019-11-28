@@ -31,9 +31,9 @@ TODO
 
 8) Follow the [official guide for Android setup](https://ionicframework.com/docs/installation/android) (tip: make sure the Java 8 JDK is [set to the default](https://stackoverflow.com/questions/21964709/how-to-set-or-change-the-default-java-jdk-version-on-os-x/24657630#24657630))
 
-9) In the project folder, execute `npx cap sync android` then `cd android` then `./gradlew assembleRelease`
+9) In the project folder, execute `npx cap sync android` then `cd android` then `./gradlew assembleDebug`
 
-10) You now have the app file in **ITSMIMBA/android/app/build/outputs/apk/release/app-release-unsigned.apk**
+10) You now have the app file in **ITSMIMBA/android/app/build/outputs/apk/debug/app-debug.apk**
 
 11) Copy this file to your Android device and open it to install the app
 
