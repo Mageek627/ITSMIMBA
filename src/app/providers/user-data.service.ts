@@ -14,7 +14,7 @@ import { StorageUtils } from '../utils/storage-utils';
   providedIn: 'root'
 })
 export class UserDataService {
-  private userData;
+  private userData: UserData;
 
   constructor() {}
 
@@ -52,7 +52,7 @@ export class UserDataService {
 
   public async initDataFirst() {
     const EUR = new Currency('EUR', CurrencyType.Fiat);
-    const newUser = new UserData([], EUR);
+    const newUser = new UserData(UserData.currentVersionNumber, [], EUR);
     await StorageUtils.setJSON(Keys.USER_DATA, newUser);
     this.userData = newUser;
     await this.create_dummy_accounts();
@@ -60,6 +60,11 @@ export class UserDataService {
 
   public async initData() {
     this.userData = await StorageUtils.getJSON(Keys.USER_DATA);
+    if (this.userData.version !== UserData.currentVersionNumber) {
+      // TODO:
+      // - Create a 'convert' function from old versions to newest
+      await this.initDataFirst();
+    }
   }
 
   public async add_account(name: string, currency: Currency) {

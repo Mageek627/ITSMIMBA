@@ -3,6 +3,7 @@ import { NavController } from '@ionic/angular';
 import { CurrencyType } from 'src/app/enums/currency-type.enum';
 import { Currency } from 'src/app/models/currency';
 import { CurrenciesService } from 'src/app/providers/currencies.service';
+import { NavigationStateService } from 'src/app/providers/navigation-state.service';
 import { UserDataService } from 'src/app/providers/user-data.service';
 
 @Component({
@@ -22,7 +23,8 @@ export class AddAccountPage implements OnInit {
   constructor(
     private currenciesService: CurrenciesService,
     private userDataService: UserDataService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private navigationStateService: NavigationStateService
   ) {
     this.fiatCurrencies = currenciesService.get_fiat_currencies().rates;
     this.cryptoCurrencies = currenciesService.get_crypto_currencies();
@@ -40,7 +42,7 @@ export class AddAccountPage implements OnInit {
       const tempCurr = new Currency('BTC', CurrencyType.Crypto);
       this.userDataService.add_account(this.nameOfAccount, tempCurr);
     }
-    this.navCtrl.pop();
+    this.navigationStateService.goBack();
   }
   verifyForm() {
     // TODO:

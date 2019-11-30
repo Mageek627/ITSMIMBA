@@ -8,11 +8,7 @@ import { AppComponent } from './app.component';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    IonicModule.forRoot({ hardwareBackButton: false })
-  ],
+  imports: [BrowserModule, AppRoutingModule, IonicModule.forRoot()],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent]
 })

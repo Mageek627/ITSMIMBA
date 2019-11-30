@@ -25,6 +25,7 @@
     "@ionic/angular": "^4.11.5",
     "core-js": "^2.6.10",
     "rxjs": "~6.5.3",
+    "serialize-javascript": ">=2.1.1",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },

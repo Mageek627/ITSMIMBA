@@ -9,7 +9,7 @@
     <ion-content>
       <ion-list>
         <ion-menu-toggle>
-          <ion-item routerLink="/home" routerDirection="root">
+          <ion-item button="true" (click)="goToFromHome('/home')">
             <ion-icon slot="start" name="home"></ion-icon>
             <ion-label>Home</ion-label>
           </ion-item>
