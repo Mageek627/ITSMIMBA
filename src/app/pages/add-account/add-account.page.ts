@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { CurrencyType } from 'src/app/enums/currency-type.enum';
 import { Currency } from 'src/app/models/currency';
@@ -11,7 +11,7 @@ import { UserDataService } from 'src/app/providers/user-data.service';
   templateUrl: './add-account.page.html',
   styleUrls: ['./add-account.page.scss']
 })
-export class AddAccountPage implements OnInit {
+export class AddAccountPage {
   public fiatCurrencies;
   public cryptoCurrencies;
   public currencyType = 'none';
@@ -29,8 +29,6 @@ export class AddAccountPage implements OnInit {
     this.fiatCurrencies = currenciesService.get_fiat_currencies().rates;
     this.cryptoCurrencies = currenciesService.get_crypto_currencies();
   }
-
-  ngOnInit() {}
 
   // TODO:
   // - Save initial transaction

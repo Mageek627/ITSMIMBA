@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Capacitor } from '@capacitor/core';
 import { NavController } from '@ionic/angular';
 import { Keys } from 'src/data/keys';
 import { MenuState } from './enums/menu-state.enum';
@@ -14,9 +13,7 @@ import { StorageUtils } from './utils/storage-utils';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
-export class AppComponent implements OnInit {
-  private listOfRootPages = ['/home'];
-
+export class AppComponent {
   constructor(
     private router: Router,
     private navCtrl: NavController,
@@ -26,32 +23,6 @@ export class AppComponent implements OnInit {
   ) {
     navigationStateService.initListener();
     this.initialize();
-  }
-
-  ngOnInit() {}
-
-  // TODO:
-  // - Make it more fluid ?
-  public goToFromHome(url: string) {
-    if (Capacitor.platform === 'android') {
-      if (url === '/home') {
-        this.navCtrl.navigateRoot(url).then(() => {
-          this.navigationStateService.history = [url];
-        });
-      } else {
-        this.navCtrl.navigateRoot(url).then(() => {
-          this.navigationStateService.history = ['/home', url];
-        });
-      }
-    } else {
-      if (url === '/home') {
-        this.navCtrl.navigateRoot(url);
-      } else {
-        this.navCtrl.navigateRoot('/home').then(() => {
-          this.navCtrl.navigateForward(url, { animated: false });
-        });
-      }
-    }
   }
 
   private async initialize() {

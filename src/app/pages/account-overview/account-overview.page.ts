@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserDataService } from 'src/app/providers/user-data.service';
 import { Account } from '../../models/account';
@@ -8,7 +8,7 @@ import { Account } from '../../models/account';
   templateUrl: './account-overview.page.html',
   styleUrls: ['./account-overview.page.scss']
 })
-export class AccountOverviewPage implements OnInit {
+export class AccountOverviewPage {
   public account: Account;
 
   constructor(
@@ -20,6 +20,4 @@ export class AccountOverviewPage implements OnInit {
       this.account = userDataService.get_accounts()[Number(params.accountId)];
     });
   }
-
-  ngOnInit() {}
 }

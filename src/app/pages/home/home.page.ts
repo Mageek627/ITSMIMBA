@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 
 @Component({
@@ -6,10 +6,8 @@ import { Plugins } from '@capacitor/core';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss']
 })
-export class HomePage implements OnInit {
+export class HomePage {
   constructor() {}
-
-  ngOnInit() {}
 
   ionViewDidEnter() {
     Plugins.SplashScreen.hide();

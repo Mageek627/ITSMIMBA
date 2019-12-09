@@ -10,7 +10,6 @@ import { MenuState } from '../enums/menu-state.enum';
 export class NavigationStateService {
   public history: string[] = [];
   public menuState = MenuState.isClosed;
-  private mainMenuId = 'main-menu';
 
   constructor(
     private router: Router,
@@ -34,7 +33,7 @@ export class NavigationStateService {
       this.menuState === MenuState.isOpened ||
       this.menuState === MenuState.isOpening
     ) {
-      this.menuCtrl.close(this.mainMenuId);
+      this.menuCtrl.close();
     }
     // Do nothing if the menu is closing
   }
