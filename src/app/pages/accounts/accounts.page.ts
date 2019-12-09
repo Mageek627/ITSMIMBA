@@ -12,7 +12,7 @@ export class AccountsPage {
 
   constructor(private userDataService: UserDataService) {}
 
-  ionViewWillEnter() {
+  ionViewDidLoad() {
     this.listAccounts = this.userDataService.get_accounts();
   }
 }

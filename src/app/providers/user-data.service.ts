@@ -47,6 +47,7 @@ export class UserDataService {
   }
 
   public get_accounts() {
+    console.log(this.userData);
     return this.userData.accounts;
   }
 
@@ -69,7 +70,17 @@ export class UserDataService {
 
   public async add_account(name: string, currency: Currency) {
     const newAccount = new Account(name, currency, [], []);
+    const id = this.userData.accounts.length;
     this.userData.accounts.push(newAccount);
+    await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
+    return id;
+  }
+
+  public async add_transaction(
+    accountNumber: number,
+    transaction: Transaction
+  ) {
+    this.userData.accounts[accountNumber].pastTransactions.push(transaction);
     await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
   }
 }

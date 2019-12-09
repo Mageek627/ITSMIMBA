@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { CurrencyType } from 'src/app/enums/currency-type.enum';
+import { Amount } from 'src/app/models/amount';
 import { Currency } from 'src/app/models/currency';
+import { Transaction } from 'src/app/models/transaction';
 import { CurrenciesService } from 'src/app/providers/currencies.service';
 import { NavigationStateService } from 'src/app/providers/navigation-state.service';
 import { UserDataService } from 'src/app/providers/user-data.service';
@@ -32,14 +34,23 @@ export class AddAccountPage {
 
   // TODO:
   // - Save initial transaction
-  add_account() {
+  async add_account() {
+    let id: number;
+    let tempCurr: Currency;
     if (this.currencyType === 'fiat') {
-      const tempCurr = new Currency('EUR', CurrencyType.Fiat);
-      this.userDataService.add_account(this.nameOfAccount, tempCurr);
+      tempCurr = new Currency('EUR', CurrencyType.Fiat);
     } else if (this.currencyType === 'crypto') {
-      const tempCurr = new Currency('BTC', CurrencyType.Crypto);
-      this.userDataService.add_account(this.nameOfAccount, tempCurr);
+      tempCurr = new Currency('BTC', CurrencyType.Crypto);
     }
+    id = await this.userDataService.add_account(this.nameOfAccount, tempCurr);
+    this.userDataService.add_transaction(
+      id,
+      new Transaction(
+        new Date(),
+        new Amount(tempCurr, this.valueOfAccount),
+        this.valueOfAccount
+      )
+    );
     this.navigationStateService.goBack();
   }
   verifyForm() {
