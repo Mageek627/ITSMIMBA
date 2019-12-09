@@ -1,22 +1,27 @@
 import { Plugins } from '@capacitor/core';
+import 'capacitor-secure-storage-plugin';
 
 export class StorageUtils {
   static set(key: string, value: any) {
-    return Plugins.Storage.set({
+    return Plugins.SecureStoragePlugin.set({
       key,
       value: String(value)
     });
   }
   static get(key: string) {
-    return Plugins.Storage.get({ key }).then(x => x.value);
+    return Plugins.SecureStoragePlugin.get({ key }).then(
+      (x: { value: string }) => x.value
+    );
   }
   static setJSON(key: string, value: any) {
-    return Plugins.Storage.set({
+    return Plugins.SecureStoragePlugin.set({
       key,
       value: JSON.stringify(value)
     });
   }
   static getJSON(key: string) {
-    return Plugins.Storage.get({ key }).then(x => JSON.parse(x.value));
+    return Plugins.SecureStoragePlugin.get({
+      key
+    }).then((x: { value: string }) => JSON.parse(x.value));
   }
 }
