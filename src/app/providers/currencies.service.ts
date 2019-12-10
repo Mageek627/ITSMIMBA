@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { cryptocurrenciesData } from 'src/data/cryptocurrencies-data';
-import { fiatCurrenciesData } from 'src/data/fiat-currencies-data';
-import { Keys } from 'src/data/keys';
+import { cryptocurrenciesData } from '../../data/cryptocurrencies-data';
+import { fiatCurrenciesData } from '../../data/fiat-currencies-data';
+import { Keys } from '../../data/keys';
 import { StorageUtils } from '../utils/storage-utils';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class CurrenciesService {
     await StorageUtils.setJSON(Keys.FIATCURRENCIES_DATA, this.fiatCurrencies);
   }
 
-  public async loadLocal() {
+  public async loadLocal(): Promise<void> {
     this.cryptoCurrencies = await StorageUtils.getJSON(
       Keys.CRYPTOCURRENCIES_DATA
     );

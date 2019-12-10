@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UserDataService } from 'src/app/providers/user-data.service';
 import { Account } from '../../models/account';
+import { UserDataService } from '../../providers/user-data.service';
 
 @Component({
   selector: 'app-account-overview',

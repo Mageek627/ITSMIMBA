@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { CurrencyType } from 'src/app/enums/currency-type.enum';
-import { Amount } from 'src/app/models/amount';
-import { Currency } from 'src/app/models/currency';
-import { Transaction } from 'src/app/models/transaction';
-import { CurrenciesService } from 'src/app/providers/currencies.service';
-import { NavigationStateService } from 'src/app/providers/navigation-state.service';
-import { UserDataService } from 'src/app/providers/user-data.service';
+import { CurrencyType } from '../../enums/currency-type.enum';
+import { Amount } from '../../models/amount';
+import { Currency } from '../../models/currency';
+import { Transaction } from '../../models/transaction';
+import { CurrenciesService } from '../../providers/currencies.service';
+import { NavigationStateService } from '../../providers/navigation-state.service';
+import { UserDataService } from '../../providers/user-data.service';
 
 @Component({
   selector: 'app-add-account',
@@ -14,11 +14,11 @@ import { UserDataService } from 'src/app/providers/user-data.service';
   styleUrls: ['./add-account.page.scss']
 })
 export class AddAccountPage {
-  public fiatCurrencies;
-  public cryptoCurrencies;
+  public fiatCurrencies: any;
+  public cryptoCurrencies: any;
   public currencyType = 'none';
-  public nameOfAccount;
-  public valueOfAccount;
+  public nameOfAccount: string;
+  public valueOfAccount: string;
   public cryptoChoice = '';
   public fiatChoice = '';
 
@@ -34,7 +34,7 @@ export class AddAccountPage {
 
   // TODO:
   // - Save initial transaction
-  async add_account() {
+  public async add_account(): Promise<void> {
     let id: number;
     let tempCurr: Currency;
     if (this.currencyType === 'fiat') {
@@ -47,13 +47,13 @@ export class AddAccountPage {
       id,
       new Transaction(
         new Date(),
-        new Amount(tempCurr, this.valueOfAccount),
-        this.valueOfAccount
+        new Amount(tempCurr, Number(this.valueOfAccount)),
+        Number(this.valueOfAccount)
       )
     );
     this.navigationStateService.goBack();
   }
-  verifyForm() {
+  public verifyForm(): boolean {
     // TODO:
     // - Proper form validation
     if (

@@ -17,7 +17,7 @@ export class NavigationStateService {
     private menuCtrl: MenuController
   ) {}
 
-  public initListener() {
+  public initListener(): void {
     Plugins.App.addListener('backButton', () => this.reactBackButton()); // This is for Android only
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -26,7 +26,7 @@ export class NavigationStateService {
     });
   }
 
-  private reactBackButton() {
+  private reactBackButton(): void {
     if (this.menuState === MenuState.isClosed) {
       this.goBack();
     } else if (
@@ -38,7 +38,7 @@ export class NavigationStateService {
     // Do nothing if the menu is closing
   }
 
-  public goBack() {
+  public goBack(): void {
     const l = this.history.length;
     if (l > 1) {
       this.navCtrl.navigateBack(this.history[l - 2]).then(() => {

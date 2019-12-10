@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { Keys } from 'src/data/keys';
+import { Keys } from '../data/keys';
 import { MenuState } from './enums/menu-state.enum';
 import { CurrenciesService } from './providers/currencies.service';
 import { NavigationStateService } from './providers/navigation-state.service';
@@ -25,7 +25,7 @@ export class AppComponent {
     this.initialize();
   }
 
-  private async initialize() {
+  private async initialize(): Promise<void> {
     const firstTime = await StorageUtils.get(Keys.FIRST_TIME);
     // If we never opened the app
     if (firstTime === null || firstTime === 'true') {
