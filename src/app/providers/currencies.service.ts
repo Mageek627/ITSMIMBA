@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { cryptocurrenciesData } from '../../data/cryptocurrencies-data';
-import { fiatCurrenciesData } from '../../data/fiat-currencies-data';
-import { Keys } from '../../data/keys';
+import { cryptocurrenciesData } from '../data/cryptocurrencies-data';
+import { fiatCurrenciesData } from '../data/fiat-currencies-data';
+import { Keys } from '../data/keys';
 import { StorageUtils } from '../utils/storage-utils';
 
 @Injectable({

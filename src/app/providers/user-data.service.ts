@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Keys } from '../../data/keys';
+import { Keys } from '../data/keys';
 import { CurrencyType } from '../enums/currency-type.enum';
 import { Occurrence } from '../enums/occurrence.enum';
 import { Account } from '../models/account';
