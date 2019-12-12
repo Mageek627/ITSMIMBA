@@ -15,5 +15,5 @@
       <ion-button [routerLink]="['/account-overview/',i]" >{{ account.name }} account</ion-button><br />
     </div><br />
   </div>
-  <ion-button routerLink="/add-account">Add account</ion-button>
+  <ion-button (click)="presentModal()">Add account</ion-button>
 </ion-content>

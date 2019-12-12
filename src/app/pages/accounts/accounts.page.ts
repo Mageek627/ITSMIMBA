@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { AddAccountPage } from '../../components/add-account/add-account.page';
 import { Account } from '../../models/account';
 import { UserDataService } from '../../providers/user-data.service';
 
@@ -10,9 +12,24 @@ import { UserDataService } from '../../providers/user-data.service';
 export class AccountsPage {
   public listAccounts: Account[];
 
-  constructor(private userDataService: UserDataService) {}
+  constructor(
+    private userDataService: UserDataService,
+    private modalCtrl: ModalController
+  ) {}
+
+  public presentModal() {
+    this.modalCtrl
+      .create({
+        component: AddAccountPage
+      })
+      .then(modal => modal.present());
+  }
 
   ionViewWillEnter() {
     this.listAccounts = this.userDataService.get_accounts();
+  }
+
+  ionViewWillLeave() {
+    this.modalCtrl.dismiss();
   }
 }

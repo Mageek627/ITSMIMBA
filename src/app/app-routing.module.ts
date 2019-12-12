@@ -21,13 +21,6 @@ const routes: Routes = [
       )
   },
   {
-    path: 'add-account',
-    loadChildren: () =>
-      import('./pages/add-account/add-account.module').then(
-        m => m.AddAccountPageModule
-      )
-  },
-  {
     path: 'settings',
     loadChildren: () =>
       import('./pages/settings/settings.module').then(m => m.SettingsPageModule)

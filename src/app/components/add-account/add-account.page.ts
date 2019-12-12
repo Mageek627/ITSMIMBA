@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { CurrencyType } from '../../enums/currency-type.enum';
 import { Amount } from '../../models/amount';
 import { Currency } from '../../models/currency';
@@ -26,6 +26,7 @@ export class AddAccountPage {
     private currenciesService: CurrenciesService,
     private userDataService: UserDataService,
     private navCtrl: NavController,
+    private modalCtrl: ModalController,
     private navigationStateService: NavigationStateService
   ) {
     this.fiatCurrencies = currenciesService.get_fiat_currencies().rates;
@@ -51,7 +52,9 @@ export class AddAccountPage {
         Number(this.valueOfAccount)
       )
     );
-    this.navigationStateService.goBack();
+    this.dismissItself();
+    // TODO:
+    // - Add successful toast message
   }
   public verifyForm(): boolean {
     // TODO:
@@ -65,5 +68,9 @@ export class AddAccountPage {
     } else {
       return true;
     }
+  }
+
+  public dismissItself(): void {
+    this.modalCtrl.dismiss();
   }
 }
