@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
+import { AddPaymentPage } from 'src/app/components/add-payment/add-payment.page';
+import { AddTransactionPage } from 'src/app/components/add-transaction/add-transaction.page';
 import { AccountOverviewPage } from './account-overview.page';
 
 const routes: Routes = [
@@ -15,10 +17,11 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AccountOverviewPage]
+  entryComponents: [AddTransactionPage, AddPaymentPage],
+  declarations: [AccountOverviewPage, AddTransactionPage, AddPaymentPage]
 })
 export class AccountOverviewPageModule {}

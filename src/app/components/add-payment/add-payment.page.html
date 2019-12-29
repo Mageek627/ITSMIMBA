@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissItself()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="centered-title">
+      Add payment
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="addPaymentForm" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label>Name:</ion-label>
+      <ion-input class="ion-text-end" formControlName="nameOfPayment"></ion-input>
+    </ion-item>
+    <ion-button type="submit" [disabled]="!addPaymentForm.valid">Add</ion-button>
+  </form>
+</ion-content>

@@ -66,8 +66,6 @@ export class AddAccountPage {
     return false;
   }
 
-  // TODO:
-  // - Save initial transaction
   public async onSubmit(): Promise<void> {
     if (this.duplicate()) {
       if (!this.toasted) {
