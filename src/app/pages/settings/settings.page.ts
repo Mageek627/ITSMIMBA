@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NavigationStateService } from 'src/app/providers/navigation-state.service';
 
 @Component({
   selector: 'app-settings',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./settings.page.scss']
 })
 export class SettingsPage {
-  constructor() {}
+  constructor(public navigationStateService: NavigationStateService) {}
 }

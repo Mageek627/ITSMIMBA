@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NavigationStateService } from 'src/app/providers/navigation-state.service';
 import { Account } from '../../models/account';
 import { UserDataService } from '../../providers/user-data.service';
 
@@ -13,7 +14,8 @@ export class AccountOverviewPage {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private userDataService: UserDataService
+    private userDataService: UserDataService,
+    public navigationStateService: NavigationStateService
   ) {
     this.activatedRoute.params.subscribe(params => {
       // Getting value from url parameter

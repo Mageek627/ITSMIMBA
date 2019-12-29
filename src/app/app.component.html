@@ -1,23 +1,23 @@
 <ion-app>
-  <ion-menu contentId="main-content" type="overlay" (ionWillOpen)="menuWillOpen()"
+  <ion-menu contentId="main-content" side="end" type="reveal" (ionWillOpen)="menuWillOpen()"
     (ionWillClose)="menuWillClose()" (ionDidOpen)="menuDidOpen()" (ionDidClose)="menuDidClose()">
     <ion-header>
       <ion-toolbar>
-        <ion-title>Menu</ion-title>
+        <ion-title class="centered-title">Menu</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
       <ion-list>
         <ion-menu-toggle>
-          <ion-item routerLink="/home" routerDirection="root" >
+          <ion-item routerLink="/home" detail="false" routerDirection="root" >
             <ion-icon slot="start" name="home"></ion-icon>
             <ion-label>Home</ion-label>
           </ion-item>
-          <ion-item routerLink="/accounts" >
+          <ion-item routerLink="/accounts" detail="false" >
             <ion-icon slot="start" name="bookmarks"></ion-icon>
             <ion-label>Accounts</ion-label>
           </ion-item>
-          <ion-item routerLink="/settings" >
+          <ion-item routerLink="/settings" detail="false" >
             <ion-icon slot="start" name="settings"></ion-icon>
             <ion-label>Settings</ion-label>
           </ion-item>

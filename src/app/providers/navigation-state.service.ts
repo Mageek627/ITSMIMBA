@@ -48,4 +48,13 @@ export class NavigationStateService {
       Plugins.App.exitApp();
     }
   }
+
+  public goBackHistoryOnly(): void {
+    const l = this.history.length;
+    if (l > 1) {
+      this.history.splice(l - 2, 2);
+    } else {
+      Plugins.App.exitApp();
+    }
+  }
 }
