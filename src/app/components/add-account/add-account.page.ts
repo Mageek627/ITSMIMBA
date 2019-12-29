@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController, NavController } from '@ionic/angular';
-import { CurrencyType } from '../../enums/currency-type.enum';
-import { Amount } from '../../models/amount';
-import { Currency } from '../../models/currency';
-import { Transaction } from '../../models/transaction';
+import { CurrencyType } from 'src/app/enums/currency-type.enum';
+import { Amount } from 'src/app/models/amount';
+import { Currency } from 'src/app/models/currency';
+import { Transaction } from 'src/app/models/transaction';
 import { CurrenciesService } from '../../providers/currencies.service';
 import { NavigationStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
@@ -17,12 +17,7 @@ import { UserDataService } from '../../providers/user-data.service';
 export class AddAccountPage {
   public fiatCurrencies: any;
   public cryptoCurrencies: any;
-  public currencyType = 'none';
-  public valueOfAccount: string;
-  public cryptoChoice = '';
-  public fiatChoice = '';
   public addAccountForm: FormGroup;
-  public nameOfAccount = '';
 
   constructor(
     private currenciesService: CurrenciesService,
@@ -35,11 +30,32 @@ export class AddAccountPage {
     this.cryptoCurrencies = currenciesService.get_crypto_currencies();
     this.addAccountForm = new FormGroup({
       nameOfAccount: new FormControl('', Validators.required),
-      currencyType: new FormControl('', Validators.required),
-      fiatChoice: new FormControl('', Validators.required),
-      cryptoChoice: new FormControl('', Validators.required),
-      currentValue: new FormControl('', Validators.required)
+      currencyType: new FormControl('none', Validators.required),
+      fiatChoice: new FormControl(''),
+      cryptoChoice: new FormControl(''),
+      currentValue: new FormControl('', [
+        Validators.required,
+        Validators.pattern('-?[0-9]*(,|.)?[0-9]*')
+      ])
     });
+  }
+
+  public toggleCurrencyType(): void {
+    if (this.addAccountForm.controls.currencyType.value === 'fiat') {
+      this.addAccountForm.controls.fiatChoice.setValidators(
+        Validators.required
+      );
+      this.addAccountForm.controls.cryptoChoice.setValidators(null);
+    } else if (this.addAccountForm.controls.currencyType.value === 'crypto') {
+      this.addAccountForm.controls.cryptoChoice.setValidators(
+        Validators.required
+      );
+      this.addAccountForm.controls.fiatChoice.setValidators(null);
+    }
+  }
+
+  public onSubmit() {
+    this.add_account();
   }
 
   // TODO:
@@ -47,36 +63,29 @@ export class AddAccountPage {
   public async add_account(): Promise<void> {
     let id: number;
     let tempCurr: Currency;
-    if (this.currencyType === 'fiat') {
+    if (this.addAccountForm.controls.currencyType.value === 'fiat') {
       tempCurr = new Currency('EUR', CurrencyType.Fiat);
-    } else if (this.currencyType === 'crypto') {
+    } else if (this.addAccountForm.controls.currencyType.value === 'crypto') {
       tempCurr = new Currency('BTC', CurrencyType.Crypto);
     }
-    id = await this.userDataService.add_account(this.nameOfAccount, tempCurr);
+    id = await this.userDataService.add_account(
+      this.addAccountForm.controls.nameOfAccount.value,
+      tempCurr
+    );
     this.userDataService.add_transaction(
       id,
       new Transaction(
         new Date(),
-        new Amount(tempCurr, Number(this.valueOfAccount)),
-        Number(this.valueOfAccount)
+        new Amount(
+          tempCurr,
+          Number(this.addAccountForm.controls.currentValue.value)
+        ),
+        Number(this.addAccountForm.controls.currentValue.value)
       )
     );
     this.dismissItself();
     // TODO:
     // - Add successful toast message
-  }
-  public verifyForm(): boolean {
-    // TODO:
-    // - Proper form validation
-    if (
-      this.valueOfAccount !== '' &&
-      this.nameOfAccount !== '' &&
-      (this.cryptoChoice !== '' || this.fiatChoice !== '')
-    ) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
   public dismissItself(): void {

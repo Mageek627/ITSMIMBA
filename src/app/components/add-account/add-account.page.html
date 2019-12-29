@@ -12,39 +12,38 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form [formGroup]="addAccountForm">
+  <form [formGroup]="addAccountForm" (ngSubmit)="onSubmit()">
     <ion-item>
       <ion-label>Name:</ion-label>
       <ion-input class="ion-text-end" formControlName="nameOfAccount"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>Type:</ion-label>
-      <ion-select [(ngModel)]="currencyType" formControlName="currencyType" placeholder="Select">
+      <ion-select formControlName="currencyType" (ionChange)="toggleCurrencyType()" placeholder="Select">
         <ion-select-option value="fiat">Fiat money (Regular)</ion-select-option>
         <ion-select-option value="crypto">Cryptocurrency</ion-select-option>
       </ion-select>
     </ion-item>
-    <div *ngIf='currencyType!=="none"'>
-      <ion-item *ngIf='currencyType=="fiat"'>
+    <div [hidden]='addAccountForm.controls.currencyType.value==="none"'>
+      <ion-item [hidden]='addAccountForm.controls.currencyType.value!=="fiat"'>
         <ion-label>Currency:</ion-label>
-        <ion-select placeholder="Select" formControlName="fiatChoice" [(ngModel)]="fiatChoice">
+        <ion-select placeholder="Select" formControlName="fiatChoice" >
           <ion-select-option *ngFor="let code of fiatCurrencies | keyvalue" [value]="code.key">{{ code.key }}
           </ion-select-option>
         </ion-select>
       </ion-item>
-      <ion-item *ngIf='currencyType=="crypto"'>
+      <ion-item [hidden]='addAccountForm.controls.currencyType.value!=="crypto"'>
         <ion-label>Currency:</ion-label>
-        <ion-select placeholder="Select" formControlName="cryptoChoice" [(ngModel)]="cryptoChoice">
+        <ion-select placeholder="Select" formControlName="cryptoChoice" >
           <ion-select-option *ngFor="let code of cryptoCurrencies" [value]="code.symbol">{{ code.symbol | uppercase }}
           </ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
         <ion-label>Current value:</ion-label>
-        <ion-input class="ion-text-end" formControlName="valueOfAccount" pattern="-?[0-9]*(,|\.)?[0-9]*"
-          [(ngModel)]="valueOfAccount"></ion-input>
+        <ion-input class="ion-text-end" formControlName="currentValue" ></ion-input>
       </ion-item>
     </div>
-    <ion-button [disabled]="verifyForm()" (click)='add_account()'>Add</ion-button>
+    <ion-button type="submit" [disabled]="!addAccountForm.valid">Add</ion-button>
   </form>
 </ion-content>
