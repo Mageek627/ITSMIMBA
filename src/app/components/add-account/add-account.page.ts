@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController, NavController } from '@ionic/angular';
 import { CurrencyType } from '../../enums/currency-type.enum';
 import { Amount } from '../../models/amount';
@@ -17,10 +18,11 @@ export class AddAccountPage {
   public fiatCurrencies: any;
   public cryptoCurrencies: any;
   public currencyType = 'none';
-  public nameOfAccount: string;
   public valueOfAccount: string;
   public cryptoChoice = '';
   public fiatChoice = '';
+  public addAccountForm: FormGroup;
+  public nameOfAccount = '';
 
   constructor(
     private currenciesService: CurrenciesService,
@@ -31,6 +33,13 @@ export class AddAccountPage {
   ) {
     this.fiatCurrencies = currenciesService.get_fiat_currencies().rates;
     this.cryptoCurrencies = currenciesService.get_crypto_currencies();
+    this.addAccountForm = new FormGroup({
+      nameOfAccount: new FormControl('', Validators.required),
+      currencyType: new FormControl('', Validators.required),
+      fiatChoice: new FormControl('', Validators.required),
+      cryptoChoice: new FormControl('', Validators.required),
+      currentValue: new FormControl('', Validators.required)
+    });
   }
 
   // TODO:

@@ -32,6 +32,6 @@ export class AccountsPage {
   }
 
   ionViewWillLeave() {
-    this.modalCtrl.dismiss();
+    this.modalCtrl.dismiss().catch(() => null);
   }
 }
