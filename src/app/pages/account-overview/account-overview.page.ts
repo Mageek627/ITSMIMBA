@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavigationStateService } from 'src/app/providers/navigation-state.service';
 import { Account } from '../../models/account';
+import { NavigationStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
 
 @Component({

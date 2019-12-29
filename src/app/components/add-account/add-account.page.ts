@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ModalController, NavController } from '@ionic/angular';
-import { CurrencyType } from 'src/app/enums/currency-type.enum';
-import { Amount } from 'src/app/models/amount';
-import { Currency } from 'src/app/models/currency';
-import { Transaction } from 'src/app/models/transaction';
+import { ModalController, ToastController } from '@ionic/angular';
+import { CurrencyType } from '../../enums/currency-type.enum';
+import { Amount } from '../../models/amount';
+import { Currency } from '../../models/currency';
+import { Transaction } from '../../models/transaction';
 import { CurrenciesService } from '../../providers/currencies.service';
 import { NavigationStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
+import { LogUtils } from '../../utils/log-utils';
 
 @Component({
   selector: 'app-add-account',
@@ -18,13 +19,15 @@ export class AddAccountPage {
   public fiatCurrencies: any;
   public cryptoCurrencies: any;
   public addAccountForm: FormGroup;
+  public toasted = false;
 
   constructor(
     private currenciesService: CurrenciesService,
     private userDataService: UserDataService,
-    private navCtrl: NavController,
     private modalCtrl: ModalController,
-    private navigationStateService: NavigationStateService
+    private navigationStateService: NavigationStateService,
+    private toastController: ToastController,
+    private logUtils: LogUtils
   ) {
     this.fiatCurrencies = currenciesService.get_fiat_currencies().rates;
     this.cryptoCurrencies = currenciesService.get_crypto_currencies();
@@ -54,13 +57,26 @@ export class AddAccountPage {
     }
   }
 
-  public onSubmit() {
-    this.add_account();
+  public duplicate(): boolean {
+    for (const a of this.userDataService.get_accounts()) {
+      if (this.addAccountForm.controls.nameOfAccount.value === a.name) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // TODO:
   // - Save initial transaction
-  public async add_account(): Promise<void> {
+  public async onSubmit(): Promise<void> {
+    if (this.duplicate()) {
+      if (!this.toasted) {
+        this.logUtils.toast('Account name already used');
+        this.toasted = true;
+        setInterval(() => (this.toasted = false), 2000);
+      }
+      return;
+    }
     let id: number;
     let tempCurr: Currency;
     if (this.addAccountForm.controls.currencyType.value === 'fiat') {
@@ -72,7 +88,7 @@ export class AddAccountPage {
       this.addAccountForm.controls.nameOfAccount.value,
       tempCurr
     );
-    this.userDataService.add_transaction(
+    await this.userDataService.add_transaction(
       id,
       new Transaction(
         new Date(),
@@ -83,12 +99,11 @@ export class AddAccountPage {
         Number(this.addAccountForm.controls.currentValue.value)
       )
     );
-    this.dismissItself();
-    // TODO:
-    // - Add successful toast message
+    await this.dismissItself();
+    await this.logUtils.toast('Account created successfully');
   }
 
-  public dismissItself(): void {
-    this.modalCtrl.dismiss();
+  public async dismissItself(): Promise<void> {
+    await this.modalCtrl.dismiss();
   }
 }

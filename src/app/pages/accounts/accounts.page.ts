@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { NavigationStateService } from 'src/app/providers/navigation-state.service';
 import { AddAccountPage } from '../../components/add-account/add-account.page';
 import { Account } from '../../models/account';
+import { NavigationStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavigationStateService } from 'src/app/providers/navigation-state.service';
+import { NavigationStateService } from '../../providers/navigation-state.service';
 
 @Component({
   selector: 'app-settings',
