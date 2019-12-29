@@ -24,8 +24,6 @@ export class UserDataService {
     const ETH = new Currency('ETH', CurrencyType.Crypto);
     const dummyAmount = new Amount(dolUSD, 12);
     const dummyPayment = new Payment(
-      1,
-      'test',
       dummyAmount,
       dummyDate,
       2,
@@ -46,8 +44,12 @@ export class UserDataService {
     await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
   }
 
-  public get_accounts(): Account[] {
+  get accounts(): Account[] {
     return this.userData.accounts;
+  }
+
+  get preferredBase(): Currency {
+    return this.userData.preferredBase;
   }
 
   public async initDataFirst(): Promise<void> {
@@ -55,7 +57,7 @@ export class UserDataService {
     const newUser = new UserData(UserData.currentVersionNumber, [], EUR);
     await StorageUtils.setJSON(Keys.USER_DATA, newUser);
     this.userData = newUser;
-    await this.create_dummy_accounts();
+    // await this.create_dummy_accounts();
   }
 
   public async initData(): Promise<void> {
@@ -75,7 +77,7 @@ export class UserDataService {
     return id;
   }
 
-  public async add_transaction(
+  public async addTransaction(
     accountNumber: number,
     transaction: Transaction
   ): Promise<void> {

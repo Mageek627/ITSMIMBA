@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { AddPaymentPage } from 'src/app/components/add-payment/add-payment.page';
-import { AddTransactionPage } from 'src/app/components/add-transaction/add-transaction.page';
+import { AddPaymentPage } from 'src/app/modals/add-payment/add-payment.page';
+import { AddTransactionPage } from 'src/app/modals/add-transaction/add-transaction.page';
 import { AccountOverviewPage } from './account-overview.page';
 
 const routes: Routes = [

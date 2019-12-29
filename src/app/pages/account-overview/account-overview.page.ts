@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { AddPaymentPage } from 'src/app/components/add-payment/add-payment.page';
-import { AddTransactionPage } from 'src/app/components/add-transaction/add-transaction.page';
+import { AddPaymentPage } from 'src/app/modals/add-payment/add-payment.page';
+import { AddTransactionPage } from 'src/app/modals/add-transaction/add-transaction.page';
 import { Account } from '../../models/account';
 import { NavigationStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
@@ -14,6 +14,7 @@ import { UserDataService } from '../../providers/user-data.service';
 })
 export class AccountOverviewPage {
   public account: Account;
+  private accountNumber: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -23,21 +24,28 @@ export class AccountOverviewPage {
   ) {
     this.activatedRoute.params.subscribe(params => {
       // Getting value from url parameter
-      this.account = userDataService.get_accounts()[Number(params.accountId)];
+      this.accountNumber = Number(params.accountId);
+      this.account = userDataService.accounts[this.accountNumber];
     });
   }
 
   presentModalTransaction() {
     this.modalCtrl
       .create({
-        component: AddTransactionPage
+        component: AddTransactionPage,
+        componentProps: {
+          accountNumber: this.accountNumber
+        }
       })
       .then(modal => modal.present());
   }
   presentModalPayment() {
     this.modalCtrl
       .create({
-        component: AddPaymentPage
+        component: AddPaymentPage,
+        componentProps: {
+          accountNumber: this.accountNumber
+        }
       })
       .then(modal => modal.present());
   }

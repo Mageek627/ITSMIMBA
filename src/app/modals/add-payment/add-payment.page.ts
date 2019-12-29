@@ -13,7 +13,13 @@ export class AddPaymentPage {
 
   constructor(private modalCtrl: ModalController, private logUtils: LogUtils) {
     this.addPaymentForm = new FormGroup({
-      nameOfPayment: new FormControl('', Validators.required)
+      labelOfPayment: new FormControl(''),
+      valueOfPayment: new FormControl('', Validators.required),
+      startDate: new FormControl(
+        new Date().toJSON().slice(0, 10),
+        Validators.required
+      ),
+      occurrence: new FormControl('', Validators.required)
     });
   }
 

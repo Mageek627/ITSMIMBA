@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { AddAccountPage } from '../../components/add-account/add-account.page';
+import { AddAccountPage } from '../../modals/add-account/add-account.page';
 import { AccountsPage } from './accounts.page';
 
 const routes: Routes = [

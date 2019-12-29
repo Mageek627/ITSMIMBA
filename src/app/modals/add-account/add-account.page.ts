@@ -58,7 +58,7 @@ export class AddAccountPage {
   }
 
   public duplicate(): boolean {
-    for (const a of this.userDataService.get_accounts()) {
+    for (const a of this.userDataService.accounts) {
       if (this.addAccountForm.controls.nameOfAccount.value === a.name) {
         return true;
       }
@@ -86,7 +86,7 @@ export class AddAccountPage {
       this.addAccountForm.controls.nameOfAccount.value,
       tempCurr
     );
-    await this.userDataService.add_transaction(
+    await this.userDataService.addTransaction(
       id,
       new Transaction(
         new Date(),

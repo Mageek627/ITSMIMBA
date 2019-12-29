@@ -14,8 +14,16 @@
 <ion-content class="ion-padding">
   <form [formGroup]="addTransactionForm" (ngSubmit)="onSubmit()">
     <ion-item>
-      <ion-label>Name:</ion-label>
-      <ion-input class="ion-text-end" formControlName="nameOfTransaction"></ion-input>
+      <ion-label>(Optional) Label:</ion-label>
+      <ion-input class="ion-text-end" formControlName="labelOfTransaction"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Date:</ion-label>
+      <ion-datetime formControlName="dateOfTransaction"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Value:</ion-label>
+      <ion-input class="ion-text-end" formControlName="valueOfTransaction"></ion-input>
     </ion-item>
     <ion-button type="submit" [disabled]="!addTransactionForm.valid">Add</ion-button>
   </form>

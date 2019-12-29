@@ -8,12 +8,11 @@ import { Amount } from './amount';
 //   the payment will happen on the last day of the month
 export class Payment {
   constructor(
-    public id: number,
-    public label: string,
     public amount: Amount,
     public startDate: Date,
     public howMany: number, // -1 if it never stops
     public factor: number,
-    public occurrence: Occurrence
+    public occurrence: Occurrence,
+    public label?: string
   ) {}
 }

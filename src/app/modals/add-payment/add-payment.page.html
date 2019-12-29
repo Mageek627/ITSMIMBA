@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissItself()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="centered-title">
+      Add payment
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="addPaymentForm" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label>(Optional) Label:</ion-label>
+      <ion-input class="ion-text-end" formControlName="labelOfPayment"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Value:</ion-label>
+      <ion-input class="ion-text-end" formControlName="valueOfPayment"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Start date:</ion-label>
+      <ion-datetime formControlName="startDate"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Occurrence:</ion-label>
+      <ion-select placeholder="Select" formControlName="occurrence">
+        <ion-select-option value="one">One time</ion-select-option>
+        <ion-select-option value="daily">Daily</ion-select-option>
+        <ion-select-option value="weekly">Weekly</ion-select-option>
+        <ion-select-option value="monthly">Monthly</ion-select-option>
+        <ion-select-option value="yearly">Yearly</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-button type="submit" [disabled]="!addPaymentForm.valid">Add</ion-button>
+  </form>
+</ion-content>

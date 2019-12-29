@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { AddAccountPage } from '../../components/add-account/add-account.page';
+import { AddAccountPage } from '../../modals/add-account/add-account.page';
 import { Account } from '../../models/account';
 import { NavigationStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
@@ -28,7 +28,7 @@ export class AccountsPage {
   }
 
   ionViewWillEnter() {
-    this.listAccounts = this.userDataService.get_accounts();
+    this.listAccounts = this.userDataService.accounts;
   }
 
   ionViewWillLeave() {
