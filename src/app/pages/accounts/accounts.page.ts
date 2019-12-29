@@ -19,11 +19,7 @@ export class AccountsPage {
     public navigationStateService: NavigationStateService
   ) {}
 
-  test() {
-    console.log(123);
-  }
-
-  public presentModal() {
+  public presentModal(): void {
     this.modalCtrl
       .create({
         component: AddAccountPage
