@@ -19,12 +19,13 @@ export class AccountsPage {
     public navigationStateService: NavigationStateService
   ) {}
 
-  public presentModal(): void {
-    this.modalCtrl
-      .create({
-        component: AddAccountPage
-      })
-      .then(modal => modal.present());
+  public async presentModal(): Promise<void> {
+    this.modalCtrl.dismiss().catch(() => null);
+    const modal = await this.modalCtrl.create({
+      component: AddAccountPage
+    });
+    await modal.present();
+    this.navigationStateService.history.push(null);
   }
 
   ionViewWillEnter() {

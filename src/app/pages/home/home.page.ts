@@ -14,9 +14,10 @@ export class HomePage {
   public async clear(): Promise<void> {
     await StorageUtils.clear();
     this.logUtils.toast('Storage cleared');
-  }
-
-  ionViewDidEnter() {
-    Plugins.SplashScreen.hide();
+    try {
+      Plugins.App.exitApp();
+    } catch (e) {
+      location.reload();
+    }
   }
 }

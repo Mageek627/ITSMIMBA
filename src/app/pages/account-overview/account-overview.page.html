@@ -18,5 +18,5 @@
   <ul>
     <li *ngFor="let transaction of account.pastTransactions">{{ transaction.amount.value }} {{transaction.amount.currency.code}} on the {{transaction.date | date: 'longDate' }}</li>
   </ul><br />
-  <ion-button (click)="presentModalTransaction()">Add transaction</ion-button><ion-button (click)="presentModalPayment()">Add payment</ion-button >
+  <ion-button (click)="presentModalTransaction()">Add transaction</ion-button><ion-button (click)="presentModalPayment()">Add payment</ion-button>
 </ion-content>

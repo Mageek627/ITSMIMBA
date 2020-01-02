@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
 import { Keys } from './data/keys';
 import { MenuState } from './enums/menu-state.enum';
 import { CurrenciesService } from './providers/currencies.service';
@@ -15,8 +13,6 @@ import { StorageUtils } from './utils/storage-utils';
 })
 export class AppComponent {
   constructor(
-    private router: Router,
-    private navCtrl: NavController,
     private userDataService: UserDataService,
     private currenciesService: CurrenciesService,
     private navigationStateService: NavigationStateService

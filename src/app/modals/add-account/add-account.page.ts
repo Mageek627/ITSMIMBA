@@ -26,14 +26,14 @@ export class AddAccountPage {
     private userDataService: UserDataService,
     private modalCtrl: ModalController,
     private navigationStateService: NavigationStateService,
-    private toastController: ToastController,
+    private toastCtrl: ToastController,
     private logUtils: LogUtils
   ) {
     this.fiatCurrencies = currenciesService.get_fiat_currencies().rates;
     this.cryptoCurrencies = currenciesService.get_crypto_currencies();
     this.addAccountForm = new FormGroup({
       nameOfAccount: new FormControl('', Validators.required),
-      currencyType: new FormControl('none', Validators.required),
+      currencyType: new FormControl('', Validators.required),
       fiatChoice: new FormControl(''),
       cryptoChoice: new FormControl(''),
       currentValue: new FormControl('', [
@@ -102,6 +102,6 @@ export class AddAccountPage {
   }
 
   public async dismissItself(): Promise<void> {
-    await this.modalCtrl.dismiss();
+    await this.navigationStateService.dismissModal();
   }
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { AddPaymentPage } from 'src/app/modals/add-payment/add-payment.page';
 import { AddTransactionPage } from 'src/app/modals/add-transaction/add-transaction.page';
 import { Account } from '../../models/account';
@@ -20,6 +20,7 @@ export class AccountOverviewPage {
     private activatedRoute: ActivatedRoute,
     private userDataService: UserDataService,
     private modalCtrl: ModalController,
+    private navCtrl: NavController,
     public navigationStateService: NavigationStateService
   ) {
     this.activatedRoute.params.subscribe(params => {
@@ -29,7 +30,7 @@ export class AccountOverviewPage {
     });
   }
 
-  presentModalTransaction() {
+  public presentModalTransaction(): void {
     this.modalCtrl
       .create({
         component: AddTransactionPage,
@@ -38,8 +39,9 @@ export class AccountOverviewPage {
         }
       })
       .then(modal => modal.present());
+    this.navigationStateService.history.push(null);
   }
-  presentModalPayment() {
+  public presentModalPayment(): void {
     this.modalCtrl
       .create({
         component: AddPaymentPage,
@@ -48,5 +50,6 @@ export class AccountOverviewPage {
         }
       })
       .then(modal => modal.present());
+    this.navigationStateService.history.push(null);
   }
 }

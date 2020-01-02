@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { NavigationStateService } from 'src/app/providers/navigation-state.service';
 import { LogUtils } from 'src/app/utils/log-utils';
 
 @Component({
@@ -11,7 +12,11 @@ import { LogUtils } from 'src/app/utils/log-utils';
 export class AddPaymentPage {
   public addPaymentForm: FormGroup;
 
-  constructor(private modalCtrl: ModalController, private logUtils: LogUtils) {
+  constructor(
+    private modalCtrl: ModalController,
+    private logUtils: LogUtils,
+    private navigationStateService: NavigationStateService
+  ) {
     this.addPaymentForm = new FormGroup({
       labelOfPayment: new FormControl(''),
       valueOfPayment: new FormControl('', Validators.required),
@@ -29,6 +34,6 @@ export class AddPaymentPage {
   }
 
   public async dismissItself(): Promise<void> {
-    await this.modalCtrl.dismiss();
+    await this.navigationStateService.dismissModal();
   }
 }

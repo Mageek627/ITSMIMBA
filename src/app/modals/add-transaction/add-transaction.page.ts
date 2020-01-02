@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { Amount } from 'src/app/models/amount';
 import { Transaction } from 'src/app/models/transaction';
+import { NavigationStateService } from 'src/app/providers/navigation-state.service';
 import { UserDataService } from 'src/app/providers/user-data.service';
 import { LogUtils } from 'src/app/utils/log-utils';
 
@@ -18,7 +19,8 @@ export class AddTransactionPage {
   constructor(
     private modalCtrl: ModalController,
     private logUtils: LogUtils,
-    private userDataService: UserDataService
+    private userDataService: UserDataService,
+    private navigationStateService: NavigationStateService
   ) {
     this.addTransactionForm = new FormGroup({
       dateOfTransaction: new FormControl(
@@ -53,6 +55,6 @@ export class AddTransactionPage {
   }
 
   public async dismissItself(): Promise<void> {
-    await this.modalCtrl.dismiss();
+    await this.navigationStateService.dismissModal();
   }
 }

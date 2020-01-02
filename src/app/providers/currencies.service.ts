@@ -16,18 +16,23 @@ export class CurrenciesService {
   public async saveJSONLocal(): Promise<void> {
     this.cryptoCurrencies = cryptocurrenciesData;
     this.fiatCurrencies = fiatCurrenciesData;
-    await StorageUtils.setJSON(
+    await StorageUtils.setJSONUnsafe(
       Keys.CRYPTOCURRENCIES_DATA,
       this.cryptoCurrencies
     );
-    await StorageUtils.setJSON(Keys.FIATCURRENCIES_DATA, this.fiatCurrencies);
+    await StorageUtils.setJSONUnsafe(
+      Keys.FIATCURRENCIES_DATA,
+      this.fiatCurrencies
+    );
   }
 
   public async loadLocal(): Promise<void> {
-    this.cryptoCurrencies = await StorageUtils.getJSON(
+    this.cryptoCurrencies = await StorageUtils.getJSONUnsafe(
       Keys.CRYPTOCURRENCIES_DATA
     );
-    this.fiatCurrencies = await StorageUtils.getJSON(Keys.FIATCURRENCIES_DATA);
+    this.fiatCurrencies = await StorageUtils.getJSONUnsafe(
+      Keys.FIATCURRENCIES_DATA
+    );
   }
 
   public get_fiat_currencies(): any {

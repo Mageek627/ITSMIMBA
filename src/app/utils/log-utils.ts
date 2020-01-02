@@ -5,17 +5,17 @@ import { ToastController } from '@ionic/angular';
   providedIn: 'root'
 })
 export class LogUtils {
-  constructor(private toastController: ToastController) {}
+  constructor(private toastCtrl: ToastController) {}
 
   // Important to get a layer of abstraction above specific logging implementations
   static log(value: any) {
-    console.log('ITSMIMBA CUSTOM LOG: ', String(value));
+    console.log('ITSMIMBA CUSTOM LOG: ' + value);
   }
-  static error(value: any) {
-    console.error('ITSMIMBA CUSTOM ERROR: ', String(value));
+  static error(e: any) {
+    console.error('ITSMIMBA CUSTOM ERROR: ' + e);
   }
-  async toast(value: any) {
-    const toast = await this.toastController.create({
+  public async toast(value: any) {
+    const toast = await this.toastCtrl.create({
       message: String(value),
       duration: 2000
     });

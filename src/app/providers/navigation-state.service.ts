@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Plugins } from '@capacitor/core';
-import { MenuController, NavController } from '@ionic/angular';
+import { MenuController, ModalController, NavController } from '@ionic/angular';
 import { MenuState } from '../enums/menu-state.enum';
 
 @Injectable({
@@ -14,7 +14,8 @@ export class NavigationStateService {
   constructor(
     private router: Router,
     private navCtrl: NavController,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    private modalCtrl: ModalController
   ) {}
 
   public initListener(): void {
@@ -41,9 +42,15 @@ export class NavigationStateService {
   public goBack(): void {
     const l = this.history.length;
     if (l > 1) {
-      this.navCtrl.navigateBack(this.history[l - 2]).then(() => {
+      if (this.history[l - 1] === null) {
+        this.modalCtrl.dismiss().then(() => this.history.splice(l - 1, 1));
+      } else {
+        // See https://github.com/ionic-team/capacitor/issues/2220
+        // this.navCtrl
+        //   .navigateBack(this.history[l - 2])
+        //   .then(() => this.history.splice(l - 2, 2));
         this.history.splice(l - 2, 2);
-      });
+      }
     } else {
       Plugins.App.exitApp();
     }
@@ -56,5 +63,10 @@ export class NavigationStateService {
     } else {
       Plugins.App.exitApp();
     }
+  }
+
+  public async dismissModal(): Promise<void> {
+    await this.modalCtrl.dismiss();
+    this.history.splice(this.history.length - 1, 1);
   }
 }
