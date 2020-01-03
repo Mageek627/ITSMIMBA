@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Plugins } from '@capacitor/core';
-import { LogUtils } from 'src/app/utils/log-utils';
-import { StorageUtils } from 'src/app/utils/storage-utils';
+import { LogUtils } from '../../utils/log-utils';
+import { StorageUtils } from '../../utils/storage-utils';
 
 @Component({
   selector: 'app-home',

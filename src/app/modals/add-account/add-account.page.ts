@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController, ToastController } from '@ionic/angular';
-import { Constants } from 'src/app/data/constants';
+import { Constants } from '../../data/constants';
 import { CurrencyType } from '../../enums/currency-type.enum';
 import { Amount } from '../../models/amount';
 import { Currency } from '../../models/currency';

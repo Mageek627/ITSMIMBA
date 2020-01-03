@@ -1,5 +1,5 @@
 import { Plugins } from '@capacitor/core';
-import 'capacitor-secure-storage-plugin';
+// import 'capacitor-secure-storage-plugin';
 
 export class StorageUtils {
   // public static set(key: string, value: any): Promise<boolean> {
@@ -61,7 +61,7 @@ export class StorageUtils {
       .catch(() => null);
   }
   public static async clear(): Promise<void> {
-    await Plugins.SecureStoragePlugin.clear();
+    // await Plugins.SecureStoragePlugin.clear();
     await Plugins.Storage.clear();
     return;
   }

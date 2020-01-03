@@ -28,29 +28,27 @@ export class NavigationStateService {
   }
 
   private reactBackButton(): void {
-    if (this.menuState === MenuState.isClosed) {
-      this.goBack();
-    } else if (
-      this.menuState === MenuState.isOpened ||
-      this.menuState === MenuState.isOpening
-    ) {
-      this.menuCtrl.close();
+    const l = this.history.length;
+    if (l > 0 && this.history[l - 1] === null) {
+      this.dismissModal();
+    } else {
+      if (this.menuState === MenuState.isClosed) {
+        this.goBack();
+      } else if (
+        this.menuState === MenuState.isOpened ||
+        this.menuState === MenuState.isOpening
+      ) {
+        this.menuCtrl.close();
+      }
+      // Do nothing if the menu is closing
     }
-    // Do nothing if the menu is closing
   }
 
   public goBack(): void {
     const l = this.history.length;
     if (l > 1) {
-      if (this.history[l - 1] === null) {
-        this.modalCtrl.dismiss().then(() => this.history.splice(l - 1, 1));
-      } else {
-        // See https://github.com/ionic-team/capacitor/issues/2220
-        // this.navCtrl
-        //   .navigateBack(this.history[l - 2])
-        //   .then(() => this.history.splice(l - 2, 2));
-        this.history.splice(l - 2, 2);
-      }
+      this.navCtrl.navigateBack(this.history[l - 2]);
+      this.history.splice(l - 2, 2);
     } else {
       Plugins.App.exitApp();
     }
@@ -65,8 +63,8 @@ export class NavigationStateService {
     }
   }
 
-  public async dismissModal(): Promise<void> {
-    await this.modalCtrl.dismiss();
+  public dismissModal(): void {
+    this.modalCtrl.dismiss();
     this.history.splice(this.history.length - 1, 1);
   }
 }

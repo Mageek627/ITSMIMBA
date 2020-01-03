@@ -18,7 +18,7 @@ export class AppComponent {
     private currenciesService: CurrenciesService,
     private navigationStateService: NavigationStateService
   ) {
-    navigationStateService.initListener();
+    this.navigationStateService.initListener();
     this.initialize();
   }
 

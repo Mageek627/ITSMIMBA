@@ -5,9 +5,9 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController, NavController } from '@ionic/angular';
-import { Occurrence } from 'src/app/enums/occurrence.enum';
-import { AddPaymentPage } from 'src/app/modals/add-payment/add-payment.page';
-import { AddTransactionPage } from 'src/app/modals/add-transaction/add-transaction.page';
+import { Occurrence } from '../../enums/occurrence.enum';
+import { AddPaymentPage } from '../../modals/add-payment/add-payment.page';
+import { AddTransactionPage } from '../../modals/add-transaction/add-transaction.page';
 import { Account } from '../../models/account';
 import { NavigationStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
