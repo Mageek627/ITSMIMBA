@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController, ToastController } from '@ionic/angular';
+import { Constants } from 'src/app/data/constants';
 import { CurrencyType } from '../../enums/currency-type.enum';
 import { Amount } from '../../models/amount';
 import { Currency } from '../../models/currency';
@@ -38,7 +39,7 @@ export class AddAccountPage {
       cryptoChoice: new FormControl(''),
       currentValue: new FormControl('', [
         Validators.required,
-        Validators.pattern('-?[0-9]*(,|.)?[0-9]*')
+        Validators.pattern(Constants.moneyRegex)
       ])
     });
   }
@@ -55,6 +56,8 @@ export class AddAccountPage {
       );
       this.addAccountForm.controls.fiatChoice.setValidators(null);
     }
+    this.addAccountForm.controls.fiatChoice.updateValueAndValidity();
+    this.addAccountForm.controls.cryptoChoice.updateValueAndValidity();
   }
 
   public duplicate(): boolean {

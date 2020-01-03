@@ -84,4 +84,12 @@ export class UserDataService {
     this.userData.accounts[accountNumber].pastTransactions.push(transaction);
     await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
   }
+
+  public async addPayment(
+    accountNumber: number,
+    payment: Payment
+  ): Promise<void> {
+    this.userData.accounts[accountNumber].activePayments.push(payment);
+    await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
+  }
 }

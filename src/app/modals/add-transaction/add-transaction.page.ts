@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { Constants } from 'src/app/data/constants';
 import { Amount } from 'src/app/models/amount';
 import { Transaction } from 'src/app/models/transaction';
 import { NavigationStateService } from 'src/app/providers/navigation-state.service';
@@ -29,7 +30,7 @@ export class AddTransactionPage {
       ),
       valueOfTransaction: new FormControl('', [
         Validators.required,
-        Validators.pattern('-?[0-9]*(,|.)?[0-9]*')
+        Validators.pattern(Constants.moneyRegex)
       ]),
       labelOfTransaction: new FormControl('')
     });

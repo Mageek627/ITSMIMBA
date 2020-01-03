@@ -16,7 +16,15 @@
   {{ account.name }} account, in {{ account.currency.code }}<br /><br /><br />
   List of transactions:<br />
   <ul>
-    <li *ngFor="let transaction of account.pastTransactions">{{ transaction.amount.value }} {{transaction.amount.currency.code}} on the {{transaction.date | date: 'longDate' }}</li>
-  </ul><br />
+    <li *ngFor="let transaction of account.pastTransactions">
+      {{ transaction.label }} {{ transaction.amount.value }} {{transaction.amount.currency.code}} on the {{transaction.date | date: 'longDate' }}
+    </li>
+  </ul><br /><br />
+  List of payments:<br />
+  <ul>
+    <li *ngFor="let payment of account.activePayments">
+      {{ payment.label }} {{ payment.amount.value }} {{payment.amount.currency.code}} starting on the {{payment.startDate | date: 'longDate' }} {{occurrenceToText(payment.occurrence, payment.howMany, payment.factor)}}
+    </li>
+  </ul><br /><br />
   <ion-button (click)="presentModalTransaction()">Add transaction</ion-button><ion-button (click)="presentModalPayment()">Add payment</ion-button>
 </ion-content>

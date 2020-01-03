@@ -27,14 +27,24 @@
     </ion-item>
     <ion-item>
       <ion-label>Occurrence:</ion-label>
-      <ion-select placeholder="Select" formControlName="occurrence">
-        <ion-select-option value="one">One time</ion-select-option>
-        <ion-select-option value="daily">Daily</ion-select-option>
-        <ion-select-option value="weekly">Weekly</ion-select-option>
-        <ion-select-option value="monthly">Monthly</ion-select-option>
-        <ion-select-option value="yearly">Yearly</ion-select-option>
+      <ion-select placeholder="Select" (ionChange)="toggleCurrencyType()" formControlName="occurrence">
+        <ion-select-option value="One">One time</ion-select-option>
+        <ion-select-option value="Daily">Daily</ion-select-option>
+        <ion-select-option value="Weekly">Weekly</ion-select-option>
+        <ion-select-option value="Monthly">Monthly</ion-select-option>
+        <ion-select-option value="Yearly">Yearly</ion-select-option>
       </ion-select>
     </ion-item>
+    <div [hidden]='addPaymentForm.controls.occurrence.value===undefined || addPaymentForm.controls.occurrence.value==="" || addPaymentForm.controls.occurrence.value==="One"'>
+      <ion-item>
+        <ion-label>Factor:</ion-label>
+        <ion-input class="ion-text-end" formControlName="factor" ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>How many times:</ion-label>
+        <ion-input class="ion-text-end" formControlName="howMany" ></ion-input>
+      </ion-item>
+    </div>
     <ion-button type="submit" [disabled]="!addPaymentForm.valid">Add</ion-button>
   </form>
 </ion-content>
