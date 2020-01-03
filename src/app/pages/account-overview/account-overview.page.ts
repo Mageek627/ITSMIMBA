@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController, NavController } from '@ionic/angular';
 import { Occurrence } from 'src/app/enums/occurrence.enum';
@@ -10,7 +14,8 @@ import { UserDataService } from '../../providers/user-data.service';
 @Component({
   selector: 'app-account-overview',
   templateUrl: './account-overview.page.html',
-  styleUrls: ['./account-overview.page.scss']
+  styleUrls: ['./account-overview.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountOverviewPage {
   public account: Account;
@@ -21,7 +26,8 @@ export class AccountOverviewPage {
     private userDataService: UserDataService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
-    public navigationStateService: NavigationStateService
+    public navigationStateService: NavigationStateService,
+    private cdr: ChangeDetectorRef
   ) {
     this.activatedRoute.params.subscribe(params => {
       // Getting value from url parameter
@@ -67,26 +73,28 @@ export class AccountOverviewPage {
     return res;
   }
 
-  public presentModalTransaction(): void {
-    this.modalCtrl
-      .create({
-        component: AddTransactionPage,
-        componentProps: {
-          accountNumber: this.accountNumber
-        }
-      })
-      .then(modal => modal.present());
+  public async presentModalTransaction(): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: AddTransactionPage,
+      componentProps: {
+        accountNumber: this.accountNumber
+      }
+    });
+    await modal.present();
     this.navigationStateService.history.push(null);
+    await modal.onWillDismiss();
+    this.cdr.detectChanges();
   }
-  public presentModalPayment(): void {
-    this.modalCtrl
-      .create({
-        component: AddPaymentPage,
-        componentProps: {
-          accountNumber: this.accountNumber
-        }
-      })
-      .then(modal => modal.present());
+  public async presentModalPayment(): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: AddPaymentPage,
+      componentProps: {
+        accountNumber: this.accountNumber
+      }
+    });
+    await modal.present();
     this.navigationStateService.history.push(null);
+    await modal.onWillDismiss();
+    this.cdr.detectChanges();
   }
 }

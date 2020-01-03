@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Constants } from 'src/app/data/constants';
@@ -14,7 +14,8 @@ import { LogUtils } from '../../utils/log-utils';
 @Component({
   selector: 'app-add-account',
   templateUrl: './add-account.page.html',
-  styleUrls: ['./add-account.page.scss']
+  styleUrls: ['./add-account.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddAccountPage {
   public fiatCurrencies: any;

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Constants } from 'src/app/data/constants';
 import { Occurrence } from 'src/app/enums/occurrence.enum';
@@ -11,7 +11,8 @@ import { LogUtils } from 'src/app/utils/log-utils';
 @Component({
   selector: 'app-add-payment',
   templateUrl: './add-payment.page.html',
-  styleUrls: ['./add-payment.page.scss']
+  styleUrls: ['./add-payment.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddPaymentPage {
   public addPaymentForm: FormGroup;

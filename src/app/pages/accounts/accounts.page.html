@@ -16,7 +16,7 @@
   <div *ngIf="listAccounts!==undefined">
     <div *ngFor="let account of listAccounts; index as i">
       <ion-button [routerLink]="['/account-overview/',i]" >{{ account.name }} account</ion-button><br />
-    </div><br />
-  </div>
+    </div>
+  </div><br />
   <ion-button (click)="presentModal()">Add account</ion-button>
 </ion-content>

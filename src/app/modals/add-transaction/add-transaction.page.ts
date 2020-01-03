@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { Constants } from 'src/app/data/constants';
@@ -11,7 +11,8 @@ import { LogUtils } from 'src/app/utils/log-utils';
 @Component({
   selector: 'app-add-transaction',
   templateUrl: './add-transaction.page.html',
-  styleUrls: ['./add-transaction.page.scss']
+  styleUrls: ['./add-transaction.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddTransactionPage {
   public addTransactionForm: FormGroup;
