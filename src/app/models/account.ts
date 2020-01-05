@@ -7,6 +7,7 @@ export class Account {
     public name: string,
     public currency: Currency,
     public activePayments: Payment[],
+    public archivedPayments: Payment[],
     public pastTransactions: Transaction[]
   ) {}
 }

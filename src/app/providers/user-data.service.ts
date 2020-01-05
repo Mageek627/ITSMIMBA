@@ -36,9 +36,10 @@ export class UserDataService {
       'Main',
       dolUSD,
       [dummyPayment],
+      [],
       [dummyTransaction]
     );
-    const dummyMain2 = new Account('ETH', ETH, [], []);
+    const dummyMain2 = new Account('ETH', ETH, [], [], []);
     const EUR = new Currency('EUR', CurrencyType.Fiat);
     this.userData.accounts.push(dummyMain, dummyMain2);
     await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
@@ -70,7 +71,7 @@ export class UserDataService {
   }
 
   public async add_account(name: string, currency: Currency): Promise<number> {
-    const newAccount = new Account(name, currency, [], []);
+    const newAccount = new Account(name, currency, [], [], []);
     const id = this.userData.accounts.length;
     this.userData.accounts.push(newAccount);
     await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
