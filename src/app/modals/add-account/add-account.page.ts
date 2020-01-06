@@ -31,8 +31,8 @@ export class AddAccountPage {
     private toastCtrl: ToastController,
     private logUtils: LogUtils
   ) {
-    this.fiatCurrencies = currenciesService.get_fiat_currencies().rates;
-    this.cryptoCurrencies = currenciesService.get_crypto_currencies();
+    this.fiatCurrencies = this.currenciesService.get_fiat_currencies().rates;
+    this.cryptoCurrencies = this.currenciesService.get_crypto_currencies();
     this.addAccountForm = new FormGroup({
       nameOfAccount: new FormControl('', Validators.required),
       currencyType: new FormControl('', Validators.required),

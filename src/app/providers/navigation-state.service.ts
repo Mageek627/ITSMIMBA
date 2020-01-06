@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Plugins } from '@capacitor/core';
+import { Capacitor, Plugins } from '@capacitor/core';
 import { MenuController, ModalController, NavController } from '@ionic/angular';
 import { MenuState } from '../enums/menu-state.enum';
 
@@ -19,7 +19,9 @@ export class NavigationStateService {
   ) {}
 
   public initListener(): void {
-    Plugins.App.addListener('backButton', () => this.reactBackButton()); // This is for Android only
+    if (Capacitor.platform === 'android') {
+      // Plugins.App.addListener('backButton', () => this.reactBackButton());
+    }
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.history.push(event.urlAfterRedirects);
