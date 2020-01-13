@@ -5,6 +5,8 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
+import { Big } from 'big.js';
+import { MathsUtils } from 'src/app/utils/maths-utils';
 import { Occurrence } from '../../enums/occurrence.enum';
 import { AddPaymentPage } from '../../modals/add-payment/add-payment.page';
 import { AddTransactionPage } from '../../modals/add-transaction/add-transaction.page';
@@ -25,6 +27,8 @@ export class AccountOverviewPage {
   public accountNumber: number;
   public DateUtils = DateUtils;
   public sortedTransfers: Transfer[];
+  public transfersByDay: Transfer[][];
+  public MathsUtils = MathsUtils;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -42,7 +46,36 @@ export class AccountOverviewPage {
     });
   }
 
+  public relevantDate(t: Transfer): Date {
+    let relevantTimestamp = t.timestampDeparture;
+    if (t.to === this.accountNumber) {
+      relevantTimestamp += t.delayForArrival;
+    }
+    return new Date(relevantTimestamp * 1000);
+  }
+
+  public relevantAmount(t: Transfer): Big | null {
+    if (t.to === this.accountNumber) {
+      return t.amountDestination;
+    }
+    if (t.from === this.accountNumber) {
+      return t.amountOrigin ? t.amountOrigin.times(-1) : null;
+    }
+    return null;
+  }
+
+  public formattedAmount(t: Transfer): string {
+    const b = this.relevantAmount(t);
+    return b
+      ? (!MathsUtils.negative(b) ? '+' : '') +
+          b.toString() +
+          ' ' +
+          this.account.assetRef.code
+      : '';
+  }
+
   private updateTransfers(): void {
+    this.transfersByDay = [];
     this.sortedTransfers = DateUtils.sortByTimestamp(
       this.account.externalTransfers.concat(
         this.filtered(
@@ -52,6 +85,22 @@ export class AccountOverviewPage {
       ),
       this.accountNumber
     );
+    let i = -1;
+    let currentDate: Date | null = null;
+    let tempArray = [];
+    for (const t of this.sortedTransfers) {
+      console.log(this.transfersByDay);
+      const preciseDate = this.relevantDate(t);
+      if (!DateUtils.datesAreOnSameDay(currentDate, preciseDate)) {
+        i++;
+        currentDate = preciseDate;
+        this.transfersByDay.push(tempArray);
+        tempArray = [];
+      }
+      tempArray.push(t);
+    }
+    this.transfersByDay.push(tempArray);
+    this.transfersByDay.shift();
   }
 
   private filtered(arr: Transfer[], n: number): Transfer[] {

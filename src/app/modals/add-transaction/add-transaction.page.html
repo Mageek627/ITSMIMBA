@@ -26,6 +26,8 @@
       <ion-input class="ion-text-end" formControlName="valueOfTransaction"></ion-input>
       {{ '&nbsp;'+userDataService.accounts[accountNumber].assetRef.code }}
     </ion-item>
-    <ion-button type="submit" [disabled]="!addTransactionForm.valid">Add</ion-button>
+    <div style="text-align:center;">
+      <ion-button type="submit" [disabled]="!addTransactionForm.valid">Add</ion-button>
+    </div>
   </form>
 </ion-content>

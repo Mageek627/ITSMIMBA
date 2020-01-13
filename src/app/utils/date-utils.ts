@@ -36,6 +36,17 @@ export class DateUtils {
     return arr;
   }
 
+  public static datesAreOnSameDay(first: Date | null, second: Date): boolean {
+    if (first === null) {
+      return false;
+    }
+    return (
+      first.getFullYear() === second.getFullYear() &&
+      first.getMonth() === second.getMonth() &&
+      first.getDate() === second.getDate()
+    );
+  }
+
   public static addDays(date: Date, days: number) {
     const result = new Date(date);
     result.setDate(result.getDate() + days);

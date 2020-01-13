@@ -4,7 +4,7 @@
       <ion-back-button (click)="this.navigationStateService.goBackHistoryOnly()"></ion-back-button>
     </ion-buttons>
     <ion-title class="centered-title">
-      Account overview
+      {{ account.name }}
     </ion-title>
     <ion-buttons slot="end">
       <ion-menu-button></ion-menu-button>
@@ -12,13 +12,41 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  {{ account.name }} account, in {{ account.assetRef.code }}<br /><br /><br />
-  List of transactions:<br />
-  <ul>
-    <li *ngFor="let transfer of sortedTransfers">
-      {{ textTransfer(transfer) }}
-    </li>
-  </ul><br /><br />
-  <ion-button (click)="presentModalTransaction()">Add transaction</ion-button><ion-button (click)="presentModalPayment()">Add payment</ion-button>
-</ion-content>
+<div class="ion-padding" id="outer">
+  <div style="text-align:center;" class="ion-padding-bottom">
+    <ion-button (click)="presentModalTransaction()">Add transaction</ion-button>
+    <ion-button (click)="presentModalPayment()">Add payment</ion-button>
+  </div>
+  <ion-content style="flex-grow : 1;">
+    <!-- {{ account.name }} account, in {{ account.assetRef.code }}<br /><br /><br />
+    List of transactions:<br />
+    <ul>
+      <li *ngFor="let transfer of sortedTransfers">
+        {{ textTransfer(transfer) }}
+      </li>
+    </ul><br /><br /> -->
+    <div *ngFor="let x of transfersByDay">
+      <ion-text color="medium">{{ relevantDate(x[0]) | date:'longDate'}}</ion-text>
+      <ion-card *ngFor="let t of x">
+        <ion-grid>
+          <ion-row class="ion-align-items-center">
+            <ion-col>
+              <div class="ion-text-left">
+                <ion-label color="medium">{{ relevantDate(t) | date:'shortTime'}}</ion-label>
+              </div>
+            </ion-col>
+            <ion-col>
+              <div class="ion-text-center">
+                <ion-label color="dark">{{ t.label }}</ion-label>
+              </div>
+            </ion-col>
+            <ion-col class="ion-text-right">
+              <ion-badge [color]="MathsUtils.negative(relevantAmount(t)) ? 'danger' : 'success'">
+                {{ formattedAmount(t) }}</ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </div>
+  </ion-content>
+</div>
