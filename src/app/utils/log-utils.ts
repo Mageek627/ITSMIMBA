@@ -8,10 +8,10 @@ export class LogUtils {
   constructor(private toastCtrl: ToastController) {}
 
   // Important to get a layer of abstraction above specific logging implementations
-  static log(value: any) {
+  public static log(value: any): void {
     console.log('ITSMIMBA CUSTOM LOG: ' + value);
   }
-  static error(e: any) {
+  public static error(e: any): void {
     console.error('ITSMIMBA CUSTOM ERROR: ' + e);
   }
   public async toast(value: any) {

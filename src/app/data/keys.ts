@@ -1,7 +1,5 @@
 export class Keys {
   public static FIRST_TIME = 'FIRST_TIME';
-  public static CRYPTOCURRENCIES_DATA = 'CRYPTOCURRENCIES_DATA';
-  public static FIATCURRENCIES_DATA = 'FIATCURRENCIES_DATA';
-
-  public static USER_DATA = 'USER_DATA';
+  public static DATA = 'DATA';
+  public static ASSET_CATALOGUE = 'ASSET_CATALOGUE';
 }

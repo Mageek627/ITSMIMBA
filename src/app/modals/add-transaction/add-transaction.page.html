@@ -19,11 +19,12 @@
     </ion-item>
     <ion-item>
       <ion-label>Date:</ion-label>
-      <ion-datetime formControlName="dateOfTransaction"></ion-datetime>
+      <ion-datetime formControlName="dateOfTransaction" displayFormat="D MMM YYYY H:mm"></ion-datetime>
     </ion-item>
     <ion-item>
-      <ion-label>Value:</ion-label>
+      <ion-label>I spent:</ion-label>
       <ion-input class="ion-text-end" formControlName="valueOfTransaction"></ion-input>
+      {{ '&nbsp;'+userDataService.accounts[accountNumber].assetRef.code }}
     </ion-item>
     <ion-button type="submit" [disabled]="!addTransactionForm.valid">Add</ion-button>
   </form>

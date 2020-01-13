@@ -3,12 +3,13 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Capacitor, Plugins } from '@capacitor/core';
 import { MenuController, ModalController, NavController } from '@ionic/angular';
 import { MenuState } from '../enums/menu-state.enum';
+import { LogUtils } from '../utils/log-utils';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NavigationStateService {
-  public history: string[] = [];
+  public history: (string | null)[] = [];
   public menuState = MenuState.isClosed;
 
   constructor(
@@ -20,7 +21,7 @@ export class NavigationStateService {
 
   public initListener(): void {
     if (Capacitor.platform === 'android') {
-      // Plugins.App.addListener('backButton', () => this.reactBackButton());
+      Plugins.App.addListener('backButton', () => this.reactBackButton());
     }
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -49,7 +50,12 @@ export class NavigationStateService {
   public goBack(): void {
     const l = this.history.length;
     if (l > 1) {
-      this.navCtrl.navigateBack(this.history[l - 2]);
+      const url = this.history[l - 2];
+      if (url === null) {
+        LogUtils.error('history[l - 2]===null in goBack()');
+        return;
+      }
+      this.navCtrl.navigateBack(url);
       this.history.splice(l - 2, 2);
     } else {
       Plugins.App.exitApp();

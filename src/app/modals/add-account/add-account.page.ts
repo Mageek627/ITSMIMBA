@@ -1,15 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ModalController, ToastController } from '@ionic/angular';
 import { Constants } from '../../data/constants';
-import { CurrencyType } from '../../enums/currency-type.enum';
-import { Amount } from '../../models/amount';
-import { Currency } from '../../models/currency';
-import { Transaction } from '../../models/transaction';
-import { CurrenciesService } from '../../providers/currencies.service';
+import { AssetType } from '../../enums/asset-type.enum';
+import { Transfer } from '../../models/transfer';
 import { NavigationStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
+import { DateUtils } from '../../utils/date-utils';
 import { LogUtils } from '../../utils/log-utils';
+import { MathsUtils } from '../../utils/maths-utils';
 
 @Component({
   selector: 'app-add-account',
@@ -18,26 +16,20 @@ import { LogUtils } from '../../utils/log-utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddAccountPage {
-  public fiatCurrencies: any;
-  public cryptoCurrencies: any;
   public addAccountForm: FormGroup;
   public toasted = false;
+  public Constants = Constants;
+  public AssetType = AssetType;
 
   constructor(
-    private currenciesService: CurrenciesService,
-    private userDataService: UserDataService,
-    private modalCtrl: ModalController,
+    public userDataService: UserDataService,
     private navigationStateService: NavigationStateService,
-    private toastCtrl: ToastController,
     private logUtils: LogUtils
   ) {
-    this.fiatCurrencies = this.currenciesService.get_fiat_currencies().rates;
-    this.cryptoCurrencies = this.currenciesService.get_crypto_currencies();
     this.addAccountForm = new FormGroup({
       nameOfAccount: new FormControl('', Validators.required),
-      currencyType: new FormControl('', Validators.required),
-      fiatChoice: new FormControl(''),
-      cryptoChoice: new FormControl(''),
+      typeChoice: new FormControl('', Validators.required),
+      codeChoice: new FormControl('', Validators.required),
       currentValue: new FormControl('', [
         Validators.required,
         Validators.pattern(Constants.moneyRegex)
@@ -45,23 +37,7 @@ export class AddAccountPage {
     });
   }
 
-  public toggleCurrencyType(): void {
-    if (this.addAccountForm.controls.currencyType.value === 'fiat') {
-      this.addAccountForm.controls.fiatChoice.setValidators(
-        Validators.required
-      );
-      this.addAccountForm.controls.cryptoChoice.setValidators(null);
-    } else if (this.addAccountForm.controls.currencyType.value === 'crypto') {
-      this.addAccountForm.controls.cryptoChoice.setValidators(
-        Validators.required
-      );
-      this.addAccountForm.controls.fiatChoice.setValidators(null);
-    }
-    this.addAccountForm.controls.fiatChoice.updateValueAndValidity();
-    this.addAccountForm.controls.cryptoChoice.updateValueAndValidity();
-  }
-
-  public duplicate(): boolean {
+  public duplicateAccountName(): boolean {
     for (const a of this.userDataService.accounts) {
       if (this.addAccountForm.controls.nameOfAccount.value === a.name) {
         return true;
@@ -71,34 +47,30 @@ export class AddAccountPage {
   }
 
   public async onSubmit(): Promise<void> {
-    if (this.duplicate()) {
+    if (this.duplicateAccountName()) {
       if (!this.toasted) {
         this.logUtils.toast('Account name already used');
         this.toasted = true;
-        setInterval(() => (this.toasted = false), 2000);
+        setTimeout(() => (this.toasted = false), 2000);
       }
       return;
     }
-    let id: number;
-    let tempCurr: Currency;
-    if (this.addAccountForm.controls.currencyType.value === 'fiat') {
-      tempCurr = new Currency('EUR', CurrencyType.Fiat);
-    } else if (this.addAccountForm.controls.currencyType.value === 'crypto') {
-      tempCurr = new Currency('BTC', CurrencyType.Crypto);
-    }
-    id = await this.userDataService.add_account(
+    const id = await this.userDataService.createAccount(
       this.addAccountForm.controls.nameOfAccount.value,
-      tempCurr
+      AssetType[
+        this.addAccountForm.controls.typeChoice.value as keyof typeof AssetType
+      ],
+      this.addAccountForm.controls.codeChoice.value
     );
-    await this.userDataService.addTransaction(
-      id,
-      new Transaction(
-        new Date(),
-        new Amount(
-          tempCurr,
-          Number(this.addAccountForm.controls.currentValue.value)
-        ),
-        Number(this.addAccountForm.controls.currentValue.value)
+    await this.userDataService.addTransfer(
+      new Transfer(
+        'Initial amount',
+        null,
+        id,
+        null,
+        MathsUtils.safeBig(this.addAccountForm.controls.currentValue.value),
+        DateUtils.now(),
+        0
       )
     );
     await this.dismissItself();

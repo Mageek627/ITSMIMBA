@@ -47,7 +47,7 @@ export class StorageUtils {
       value: String(value)
     });
   }
-  public static get(key: string): Promise<string> {
+  public static get(key: string): Promise<string | null> {
     return Plugins.Storage.get({ key })
       .then((x: { value: string }) => x.value)
       .catch(() => null);
@@ -57,7 +57,7 @@ export class StorageUtils {
   }
   public static getJSON(key: string): Promise<any> {
     return this.get(key)
-      .then(value => JSON.parse(value))
+      .then(value => (value === null ? null : JSON.parse(value)))
       .catch(() => null);
   }
   public static async clear(): Promise<void> {
@@ -71,7 +71,7 @@ export class StorageUtils {
       value: String(value)
     });
   }
-  public static getUnsafe(key: string): Promise<string> {
+  public static getUnsafe(key: string): Promise<string | null> {
     return Plugins.Storage.get({ key })
       .then((x: { value: string }) => x.value)
       .catch(() => null);
@@ -81,7 +81,7 @@ export class StorageUtils {
   }
   public static getJSONUnsafe(key: string): Promise<any> {
     return this.getUnsafe(key)
-      .then(value => JSON.parse(value))
+      .then(value => (value === null ? null : JSON.parse(value)))
       .catch(() => null);
   }
 }

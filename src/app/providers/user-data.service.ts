@@ -1,96 +1,145 @@
 import { Injectable } from '@angular/core';
+import { Big } from 'big.js';
+import { Constants } from '../data/constants';
+import { cryptoCatalogue } from '../data/crypto-catalogue';
+import { fiatCatalogue } from '../data/fiat-catalogue';
 import { Keys } from '../data/keys';
-import { CurrencyType } from '../enums/currency-type.enum';
-import { Occurrence } from '../enums/occurrence.enum';
+import { AssetType } from '../enums/asset-type.enum';
 import { Account } from '../models/account';
-import { Amount } from '../models/amount';
-import { Currency } from '../models/currency';
-import { Payment } from '../models/payment';
-import { Transaction } from '../models/transaction';
-import { UserData } from '../models/user-data';
+import { AccountsGraph } from '../models/accounts-graph';
+import { AssetDefinition } from '../models/asset-definition';
+import { AssetReference } from '../models/asset-reference';
+import { Data } from '../models/data';
+import { Transfer } from '../models/transfer';
+import { User } from '../models/user';
+import { DateUtils } from '../utils/date-utils';
+import { LogUtils } from '../utils/log-utils';
+import { MathsUtils } from '../utils/maths-utils';
 import { StorageUtils } from '../utils/storage-utils';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserDataService {
-  private userData: UserData;
+  private data: Data;
+  public assetCatalogue: AssetDefinition[][];
 
   constructor() {}
 
   private async create_dummy_accounts(): Promise<void> {
-    const dummyDate = new Date();
-    const dolUSD = new Currency('USD', CurrencyType.Fiat);
-    const ETH = new Currency('ETH', CurrencyType.Crypto);
-    const dummyAmount = new Amount(dolUSD, 12);
-    const dummyPayment = new Payment(
-      dummyAmount,
-      dummyDate,
-      2,
-      2,
-      Occurrence.Monthly
+    const dummyA = new Account(
+      'Test 1',
+      new AssetReference(AssetType.Fiat, 'USD')
     );
-    const dummyTransaction = new Transaction(dummyDate, dummyAmount, 12);
-
-    const dummyMain = new Account(
-      'Main',
-      dolUSD,
-      [dummyPayment],
-      [],
-      [dummyTransaction]
+    const dummyB = new Account(
+      'Test 2',
+      new AssetReference(AssetType.Crypto, 'ETH'),
+      true,
+      [new Transfer('Hey', null, 1, null, new Big('1.2'), DateUtils.now(), 0)]
     );
-    const dummyMain2 = new Account('ETH', ETH, [], [], []);
-    const EUR = new Currency('EUR', CurrencyType.Fiat);
-    this.userData.accounts.push(dummyMain, dummyMain2);
-    await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
+    const dummyG = new AccountsGraph([dummyA, dummyB], [], [], []);
+    const dummyU = new User(new AssetReference(AssetType.Fiat, 'EUR'), dummyG);
+    this.data = new Data(dummyU);
+    await StorageUtils.setJSON(Keys.DATA, this.data);
   }
 
   get accounts(): Account[] {
-    return this.userData.accounts;
+    return this.data.user.accountsGraph.accounts;
   }
 
-  get preferredBase(): Currency {
-    return this.userData.preferredBase;
+  get baseAsset(): AssetReference {
+    return this.data.user.baseAsset;
+  }
+
+  get internalTransfers(): Transfer[] {
+    return this.data.user.accountsGraph.internalTransfers;
   }
 
   public async initDataFirst(): Promise<void> {
-    const EUR = new Currency('EUR', CurrencyType.Fiat);
-    const newUser = new UserData(UserData.currentVersionNumber, [], EUR);
-    await StorageUtils.setJSON(Keys.USER_DATA, newUser);
-    this.userData = newUser;
-    // await this.create_dummy_accounts();
+    const newUser = new User(
+      new AssetReference(AssetType.Fiat, Constants.baseCurrency)
+    );
+    const newData = new Data(newUser);
+    await StorageUtils.setJSON(Keys.DATA, newData);
+    this.assetCatalogue = [fiatCatalogue, cryptoCatalogue, [], [], []];
+    await StorageUtils.setJSONUnsafe(Keys.ASSET_CATALOGUE, this.assetCatalogue);
+    this.data = newData;
+    await this.create_dummy_accounts();
+  }
+
+  private convertToBig(x: any): any {
+    const b = (z: string) => MathsUtils.safeBig(z);
+    for (const a of x.user.accountsGraph.accounts) {
+      a.minimumAmount = b(a.minimumAmount);
+      for (const e of a.externalTransfers) {
+        e.amountOrigin = b(e.amountOrigin);
+        e.amountDestination = b(e.amountDestination);
+      }
+      for (const e of a.externalLimits) {
+        e.amountOrigin = b(e.amountOrigin);
+        e.amountDestination = b(e.amountDestination);
+      }
+    }
+    for (const i of x.user.accountsGraph.internalTransfers) {
+      i.amountOrigin = b(i.amountOrigin);
+      i.amountDestination = b(i.amountDestination);
+    }
+    for (const i of x.user.accountsGraph.internalLimits) {
+      i.amountOrigin = b(i.amountOrigin);
+      i.amountDestination = b(i.amountDestination);
+    }
+    for (const v of x.user.valuations) {
+      for (const j of v) {
+        j.value = b(j.value);
+      }
+    }
+    for (const i of x.user.infiniteRecurringTransfers) {
+      i.transfer.amountOrigin = b(i.transfer.amountOrigin);
+      i.transfer.amountDestination = b(i.transfer.amountDestination);
+    }
+    return x;
   }
 
   public async initData(): Promise<void> {
-    this.userData = await StorageUtils.getJSON(Keys.USER_DATA);
-    if (this.userData.version !== UserData.currentVersionNumber) {
+    this.data = this.convertToBig(await StorageUtils.getJSON(Keys.DATA));
+    this.assetCatalogue = await StorageUtils.getJSONUnsafe(
+      Keys.ASSET_CATALOGUE
+    );
+    if (this.data.version !== Constants.currentVersionNumber) {
       // TODO:
       // - Create a 'convert' function from old versions to newest
-      await this.initDataFirst();
+      LogUtils.error('Data version different from current');
     }
   }
 
-  public async add_account(name: string, currency: Currency): Promise<number> {
-    const newAccount = new Account(name, currency, [], [], []);
-    const id = this.userData.accounts.length;
-    this.userData.accounts.push(newAccount);
-    await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
+  public async createAccount(name: string, assetType: AssetType, code: string) {
+    const newAccount = new Account(name, new AssetReference(assetType, code));
+    const id = this.data.user.accountsGraph.accounts.length;
+    this.data.user.accountsGraph.accounts.push(newAccount);
+    await StorageUtils.setJSON(Keys.DATA, this.data);
     return id;
   }
 
-  public async addTransaction(
-    accountNumber: number,
-    transaction: Transaction
-  ): Promise<void> {
-    this.userData.accounts[accountNumber].pastTransactions.push(transaction);
-    await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
+  public async addTransfer(transfer: Transfer): Promise<void> {
+    if (transfer.from === null && transfer.to !== null) {
+      this.data.user.accountsGraph.accounts[transfer.to].externalTransfers.push(
+        transfer
+      );
+    } else if (transfer.from !== null && transfer.to === null) {
+      this.data.user.accountsGraph.accounts[
+        transfer.from
+      ].externalTransfers.push(transfer);
+    } else if (transfer.from !== null && transfer.to !== null) {
+      this.data.user.accountsGraph.internalTransfers.push(transfer);
+    }
+    await StorageUtils.setJSON(Keys.DATA, this.data);
   }
 
-  public async addPayment(
-    accountNumber: number,
-    payment: Payment
-  ): Promise<void> {
-    this.userData.accounts[accountNumber].activePayments.push(payment);
-    await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
-  }
+  // public async addPayment(
+  //   accountNumber: number,
+  //   payment: Payment2
+  // ): Promise<void> {
+  //   this.userData.accounts[accountNumber].activePayments.push(payment);
+  //   await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
+  // }
 }

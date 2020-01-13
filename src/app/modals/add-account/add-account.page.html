@@ -19,29 +19,29 @@
     </ion-item>
     <ion-item>
       <ion-label>Type:</ion-label>
-      <ion-select formControlName="currencyType" (ionChange)="toggleCurrencyType()" placeholder="Select">
-        <ion-select-option value="fiat">Fiat money (Regular)</ion-select-option>
-        <ion-select-option value="crypto">Cryptocurrency</ion-select-option>
+      <ion-select formControlName="typeChoice" (ionChange)="addAccountForm.controls.codeChoice.reset()"
+        placeholder="Select">
+        <ion-select-option *ngFor="let assetType of Constants.assetTypeFullName" [value]="assetType[0]">
+          {{ assetType[1] }}</ion-select-option>
       </ion-select>
     </ion-item>
-    <div [hidden]='addAccountForm.controls.currencyType.value===undefined || addAccountForm.controls.currencyType.value===""'>
-      <ion-item [hidden]='addAccountForm.controls.currencyType.value!=="fiat"'>
-        <ion-label>Currency:</ion-label>
-        <ion-select placeholder="Select" formControlName="fiatChoice" >
-          <ion-select-option *ngFor="let code of fiatCurrencies | keyvalue" [value]="code.key">{{ code.key }}
+    <div
+      [hidden]='addAccountForm.controls.typeChoice.value===undefined || addAccountForm.controls.typeChoice.value===""'>
+      <ion-item>
+        <ion-label>{{ addAccountForm.controls.typeChoice.value }}:</ion-label>
+        <ion-select placeholder="Select" formControlName="codeChoice">
+          <div *ngIf='addAccountForm.controls.typeChoice.value!==undefined && addAccountForm.controls.typeChoice.value!==""'>
+          <ion-select-option
+            *ngFor="let assetDef of userDataService.assetCatalogue[AssetType[addAccountForm.controls.typeChoice.value]]"
+            [value]="assetDef.assetRef.code">{{ assetDef.assetRef.code }}
+            {{ assetDef.name!=='' ? '('+assetDef.name+')' : ''}}
           </ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item [hidden]='addAccountForm.controls.currencyType.value!=="crypto"'>
-        <ion-label>Currency:</ion-label>
-        <ion-select placeholder="Select" formControlName="cryptoChoice" >
-          <ion-select-option *ngFor="let code of cryptoCurrencies" [value]="code.symbol">{{ code.symbol | uppercase }}
-          </ion-select-option>
+        </div>
         </ion-select>
       </ion-item>
       <ion-item>
         <ion-label>Current value:</ion-label>
-        <ion-input class="ion-text-end" formControlName="currentValue" ></ion-input>
+        <ion-input class="ion-text-end" formControlName="currentValue"></ion-input>
       </ion-item>
     </div>
     <ion-button type="submit" [disabled]="!addAccountForm.valid">Add</ion-button>

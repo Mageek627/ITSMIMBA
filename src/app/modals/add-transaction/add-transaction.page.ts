@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ModalController } from '@ionic/angular';
+import { Big } from 'big.js';
 import { Constants } from '../../data/constants';
-import { Amount } from '../../models/amount';
-import { Transaction } from '../../models/transaction';
+import { Transfer } from '../../models/transfer';
 import { NavigationStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
+import { DateUtils } from '../../utils/date-utils';
 import { LogUtils } from '../../utils/log-utils';
+import { MathsUtils } from '../../utils/maths-utils';
 
 @Component({
   selector: 'app-add-transaction',
@@ -19,14 +20,13 @@ export class AddTransactionPage {
   @Input() accountNumber: number;
 
   constructor(
-    private modalCtrl: ModalController,
     private logUtils: LogUtils,
-    private userDataService: UserDataService,
+    public userDataService: UserDataService,
     private navigationStateService: NavigationStateService
   ) {
     this.addTransactionForm = new FormGroup({
       dateOfTransaction: new FormControl(
-        new Date().toJSON().slice(0, 10),
+        new Date().toJSON(),
         Validators.required
       ),
       valueOfTransaction: new FormControl('', [
@@ -41,17 +41,45 @@ export class AddTransactionPage {
     const dateOfTransaction: Date = new Date(
       this.addTransactionForm.controls.dateOfTransaction.value
     );
-    const amountOfTransaction = new Amount(
-      this.userDataService.accounts[this.accountNumber].currency,
+    const val = MathsUtils.safeBig(
       this.addTransactionForm.controls.valueOfTransaction.value
     );
-    const t = new Transaction(
-      dateOfTransaction,
-      amountOfTransaction,
-      this.addTransactionForm.controls.valueOfTransaction.value,
-      this.addTransactionForm.controls.labelOfTransaction.value
-    );
-    await this.userDataService.addTransaction(this.accountNumber, t);
+    if (val === null) {
+      return;
+    }
+    let t: Transfer;
+    if (MathsUtils.positive(val)) {
+      t = new Transfer(
+        this.addTransactionForm.controls.labelOfTransaction.value,
+        this.accountNumber,
+        null,
+        val,
+        null,
+        DateUtils.toTimestamp(dateOfTransaction),
+        0
+      );
+    } else if (MathsUtils.negative(val)) {
+      t = new Transfer(
+        this.addTransactionForm.controls.labelOfTransaction.value,
+        null,
+        this.accountNumber,
+        null,
+        val.times(-1),
+        DateUtils.toTimestamp(dateOfTransaction),
+        0
+      );
+    } else {
+      t = new Transfer(
+        this.addTransactionForm.controls.labelOfTransaction.value,
+        null,
+        this.accountNumber,
+        null,
+        new Big(0),
+        DateUtils.toTimestamp(dateOfTransaction),
+        0
+      );
+    }
+    await this.userDataService.addTransfer(t);
     await this.dismissItself();
     await this.logUtils.toast('Transaction added');
   }

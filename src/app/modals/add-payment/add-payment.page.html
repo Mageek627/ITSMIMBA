@@ -20,14 +20,20 @@
     <ion-item>
       <ion-label>Value:</ion-label>
       <ion-input class="ion-text-end" formControlName="valueOfPayment"></ion-input>
+      {{ '&nbsp;'+userDataService.accounts[accountNumber].assetRef.code }}
     </ion-item>
     <ion-item>
       <ion-label>Start date:</ion-label>
-      <ion-datetime formControlName="startDate"></ion-datetime>
+      <ion-datetime formControlName="startDate" displayFormat="D MMM YYYY H:mm"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Working days only:</ion-label>
+      <ion-checkbox formControlName="workingDaysOnly"></ion-checkbox>
     </ion-item>
     <ion-item>
       <ion-label>Occurrence:</ion-label>
       <ion-select placeholder="Select" (ionChange)="toggleCurrencyType()" formControlName="occurrence">
+        <ion-select-option value="EverySecond">Every second</ion-select-option>
         <ion-select-option value="One">One time</ion-select-option>
         <ion-select-option value="Daily">Daily</ion-select-option>
         <ion-select-option value="Weekly">Weekly</ion-select-option>
