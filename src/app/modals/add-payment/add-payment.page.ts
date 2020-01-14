@@ -81,6 +81,10 @@ export class AddPaymentPage {
       o = Occurrence.Daily;
       h = Number(this.addPaymentForm.controls.howMany.value);
       f = 7 * Number(this.addPaymentForm.controls.factor.value);
+    } else if (this.addPaymentForm.controls.occurrence.value === 'Yearly') {
+      o = Occurrence.Monthly;
+      h = Number(this.addPaymentForm.controls.howMany.value);
+      f = 12 * Number(this.addPaymentForm.controls.factor.value);
     } else {
       o = (Occurrence as any)[this.addPaymentForm.controls.occurrence.value];
       h = Number(this.addPaymentForm.controls.howMany.value);
@@ -130,9 +134,6 @@ export class AddPaymentPage {
             break;
           case Occurrence.Monthly:
             calculatedDate = DateUtils.addMonths(calculatedDate, f);
-            break;
-          case Occurrence.Yearly:
-            calculatedDate = DateUtils.addYears(calculatedDate, f);
             break;
         }
       }

@@ -136,10 +136,10 @@ export class AccountOverviewPage {
             }
             break;
           case Occurrence.Monthly:
+            if (factor % 12 === 0) {
+              res += Math.floor(factor / 12) + ' years';
+            }
             res += factor + ' months';
-            break;
-          case Occurrence.Yearly:
-            res += factor + 'years';
             break;
         }
       }
