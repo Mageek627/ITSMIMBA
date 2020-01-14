@@ -6,7 +6,6 @@ import { fiatCatalogue } from '../data/fiat-catalogue';
 import { Keys } from '../data/keys';
 import { AssetType } from '../enums/asset-type.enum';
 import { Account } from '../models/account';
-import { AccountsGraph } from '../models/accounts-graph';
 import { AssetDefinition } from '../models/asset-definition';
 import { AssetReference } from '../models/asset-reference';
 import { Data } from '../models/data';
@@ -37,28 +36,29 @@ export class UserDataService {
       true,
       [new Transfer('Hey', null, 1, null, new Big('1.2'), DateUtils.now(), 0)]
     );
-    const dummyG = new AccountsGraph([dummyA, dummyB], [], [], []);
-    const dummyU = new User(new AssetReference(AssetType.Fiat, 'EUR'), dummyG);
-    this.data = new Data(dummyU);
+    this.data.user.accountsGraph.accounts.push(dummyA, dummyB);
     await StorageUtils.setJSON(Keys.DATA, this.data);
   }
 
   get accounts(): Account[] {
     return this.data.user.accountsGraph.accounts;
   }
-
   get baseAsset(): AssetReference {
     return this.data.user.baseAsset;
   }
-
   get internalTransfers(): Transfer[] {
     return this.data.user.accountsGraph.internalTransfers;
+  }
+  get holidays(): Date[] {
+    return this.data.user.holidays;
   }
 
   public async initDataFirst(): Promise<void> {
     const newUser = new User(
       new AssetReference(AssetType.Fiat, Constants.baseCurrency)
     );
+    newUser.holidays = [new Date('2020-12-25'), new Date('2021-01-01')];
+    console.log(newUser.holidays);
     const newData = new Data(newUser);
     await StorageUtils.setJSON(Keys.DATA, newData);
     this.assetCatalogue = [fiatCatalogue, cryptoCatalogue, [], [], []];
@@ -120,7 +120,7 @@ export class UserDataService {
     return id;
   }
 
-  public async addTransfer(transfer: Transfer): Promise<void> {
+  private addTransferNoSave(transfer: Transfer): void {
     if (transfer.from === null && transfer.to !== null) {
       this.data.user.accountsGraph.accounts[transfer.to].externalTransfers.push(
         transfer
@@ -132,14 +132,15 @@ export class UserDataService {
     } else if (transfer.from !== null && transfer.to !== null) {
       this.data.user.accountsGraph.internalTransfers.push(transfer);
     }
+  }
+
+  public async addTransfer(transfer: Transfer): Promise<void> {
+    this.addTransferNoSave(transfer);
     await StorageUtils.setJSON(Keys.DATA, this.data);
   }
 
-  // public async addPayment(
-  //   accountNumber: number,
-  //   payment: Payment2
-  // ): Promise<void> {
-  //   this.userData.accounts[accountNumber].activePayments.push(payment);
-  //   await StorageUtils.setJSON(Keys.USER_DATA, this.userData);
-  // }
+  public async addManyTransfers(arr: Transfer[]): Promise<void> {
+    arr.forEach((x: Transfer) => this.addTransferNoSave(x));
+    await StorageUtils.setJSON(Keys.DATA, this.data);
+  }
 }

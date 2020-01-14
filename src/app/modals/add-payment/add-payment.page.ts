@@ -24,7 +24,8 @@ export class AddPaymentPage {
   constructor(
     private logUtils: LogUtils,
     private navigationStateService: NavigationStateService,
-    public userDataService: UserDataService
+    public userDataService: UserDataService,
+    private dateUtils: DateUtils
   ) {
     this.addPaymentForm = new FormGroup({
       labelOfPayment: new FormControl(''),
@@ -43,7 +44,7 @@ export class AddPaymentPage {
   public howManyTest(c: FormControl): any {
     if (
       c.value === '-1' ||
-      (c.value === parseInt(c.value, 10) + '' && parseInt(c.value, 10) > 1)
+      (c.value === parseInt(c.value, 10) + '' && parseInt(c.value, 10) > 0)
     ) {
       return null;
     } else {
@@ -51,33 +52,11 @@ export class AddPaymentPage {
     }
   }
 
-  public toggleCurrencyType(): void {
-    if (this.addPaymentForm.controls.occurrence.value === 'One') {
-      this.addPaymentForm.controls.howMany.setValidators(null);
-      this.addPaymentForm.controls.factor.setValidators(null);
-    } else {
-      this.addPaymentForm.controls.howMany.setValidators([
-        Validators.required,
-        this.howManyTest
-      ]);
-      this.addPaymentForm.controls.factor.setValidators([
-        Validators.required,
-        MathsUtils.positiveNumberValidator
-      ]);
-    }
-    this.addPaymentForm.controls.howMany.updateValueAndValidity();
-    this.addPaymentForm.controls.factor.updateValueAndValidity();
-  }
-
   public async onSubmit(): Promise<void> {
     let o: Occurrence;
     let f: number;
     let h: number;
-    if (this.addPaymentForm.controls.occurrence.value === 'One') {
-      o = Occurrence.Daily;
-      h = 1;
-      f = 1;
-    } else if (this.addPaymentForm.controls.occurrence.value === 'Weekly') {
+    if (this.addPaymentForm.controls.occurrence.value === 'Weekly') {
       o = Occurrence.Daily;
       h = Number(this.addPaymentForm.controls.howMany.value);
       f = 7 * Number(this.addPaymentForm.controls.factor.value);
@@ -111,32 +90,37 @@ export class AddPaymentPage {
         )
       );
     } else {
+      const arr: Transfer[] = [];
       let calculatedDate = start;
       for (let i = 0; i < h; i++) {
+        const actualDate = this.dateUtils.addHolidays(
+          calculatedDate,
+          this.addPaymentForm.controls.workingDaysOnly.value === 'true',
+          this.userDataService.holidays
+        );
         const t = new Transfer(
           this.addPaymentForm.controls.labelOfPayment.value,
           this.accountNumber,
           null,
           MathsUtils.safeBig(this.addPaymentForm.controls.valueOfPayment.value),
           null,
-          DateUtils.toTimestamp(calculatedDate),
+          DateUtils.toTimestamp(actualDate),
           0
         );
-        await this.userDataService.addTransfer(t);
+        arr.push(t);
         switch (o) {
           case Occurrence.Daily:
-            calculatedDate = DateUtils.addDays(calculatedDate, f);
+            calculatedDate = DateUtils.addDaysSimple(calculatedDate, f);
             break;
           case Occurrence.EverySecond:
-            calculatedDate = new Date(
-              (DateUtils.toTimestamp(calculatedDate) + f) * 1000
-            );
+            calculatedDate = DateUtils.addSecondsSimple(calculatedDate, f);
             break;
           case Occurrence.Monthly:
-            calculatedDate = DateUtils.addMonths(calculatedDate, f);
+            calculatedDate = DateUtils.addMonthsSimple(calculatedDate, f);
             break;
         }
       }
+      await this.userDataService.addManyTransfers(arr);
     }
     await this.dismissItself();
     await this.logUtils.toast('Payment added');

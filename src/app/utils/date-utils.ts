@@ -47,17 +47,15 @@ export class DateUtils {
     );
   }
 
-  public static addDays(date: Date, days: number) {
+  public static addSecondsSimple(date: Date, seconds: number): Date {
+    return new Date((DateUtils.toTimestamp(date) + seconds) * 1000);
+  }
+  public static addDaysSimple(date: Date, days: number): Date {
     const result = new Date(date);
     result.setDate(result.getDate() + days);
     return result;
   }
-  public static addYears(date: Date, years: number) {
-    const result = new Date(date);
-    result.setFullYear(result.getFullYear() + years);
-    return result;
-  }
-  public static addMonths(date: Date, months: number) {
+  public static addMonthsSimple(date: Date, months: number): Date {
     const d = date.getDate();
     date.setMonth(date.getMonth() + months);
     if (date.getDate() !== d) {
@@ -78,5 +76,38 @@ export class DateUtils {
     } else {
       return '';
     }
+  }
+
+  public isHoliday(date: Date, holidays: Date[]): boolean {
+    const day = date.getDay();
+    const isSaturday = day === 6;
+    const isSunday = day === 0;
+    if (isSaturday || isSunday) {
+      return true;
+    }
+    let flag = false;
+    for (const h of holidays) {
+      if (DateUtils.datesAreOnSameDay(date, h)) {
+        flag = true;
+        break;
+      }
+    }
+    return flag;
+  }
+
+  public addHolidays(
+    date: Date,
+    workingDaysOnly: boolean,
+    holidays: Date[]
+  ): Date {
+    if (!workingDaysOnly) {
+      return date;
+    }
+    console.log(date, this.isHoliday(date, holidays));
+    while (this.isHoliday(date, holidays)) {
+      console.log(date, this.isHoliday(date, holidays));
+      date = DateUtils.addDaysSimple(date, 1);
+    }
+    return date;
   }
 }

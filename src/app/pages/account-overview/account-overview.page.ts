@@ -89,7 +89,6 @@ export class AccountOverviewPage {
     let currentDate: Date | null = null;
     let tempArray = [];
     for (const t of this.sortedTransfers) {
-      console.log(this.transfersByDay);
       const preciseDate = this.relevantDate(t);
       if (!DateUtils.datesAreOnSameDay(currentDate, preciseDate)) {
         i++;

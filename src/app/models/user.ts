@@ -9,7 +9,7 @@ export class User {
     public baseAsset: AssetReference,
     public accountsGraph: AccountsGraph = new AccountsGraph(),
     public valuations: Valuation[][] = [], // valuations[type][code_id][val_id]==valuation
-    public holidays: number[] = [],
+    public holidays: Date[] = [],
     public infiniteRecurringTransfers: InfiniteRecurringTransfer[] = [],
     public simulatedUntil: number = DateUtils.now() // We have generated the infinite recurring transfers until this date
   ) {}

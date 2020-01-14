@@ -9,4 +9,8 @@ import { NavigationStateService } from '../../providers/navigation-state.service
 })
 export class SettingsPage {
   constructor(public navigationStateService: NavigationStateService) {}
+
+  public export(): void {}
+
+  public importStepOne(): void {}
 }
