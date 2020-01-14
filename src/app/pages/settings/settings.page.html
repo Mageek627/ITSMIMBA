@@ -14,7 +14,19 @@
 
 <ion-content class="ion-padding">
   <div style="text-align: center;">
-    <ion-button (click)="importStepOne()">Import</ion-button><ion-button (click)="export()">Export</ion-button>
+    <ion-button (click)="importStepOne()">Import data</ion-button>
+    <ion-button (click)="export()">Export data</ion-button>
   </div><br />
-  <ion-textarea>test</ion-textarea>
+  <div [hidden]="!isExporting">
+    <p>Please copy the following backup text and keep it somewhere safe:</p>
+  </div>
+  <ion-item [hidden]="!textareaVisible">
+    <ion-textarea #codeTextarea [value]="jsonCode" [(ngModel)]="jsonCode" rows="8" [placeholder]="placeholder"></ion-textarea>
+  </ion-item><br />
+  <div style="text-align: center;" [hidden]="isExporting || !textareaVisible">
+    <ion-button (click)="askConfirm()">Submit</ion-button>
+  </div>
+  <div style="text-align: center;" [hidden]="!isExporting || !textareaVisible">
+    <ion-button (click)="copy()">Copy text</ion-button>
+  </div>
 </ion-content>

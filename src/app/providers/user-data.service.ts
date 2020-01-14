@@ -58,7 +58,6 @@ export class UserDataService {
       new AssetReference(AssetType.Fiat, Constants.baseCurrency)
     );
     newUser.holidays = [new Date('2020-12-25'), new Date('2021-01-01')];
-    console.log(newUser.holidays);
     const newData = new Data(newUser);
     await StorageUtils.setJSON(Keys.DATA, newData);
     this.assetCatalogue = [fiatCatalogue, cryptoCatalogue, [], [], []];
@@ -109,6 +108,26 @@ export class UserDataService {
       // TODO:
       // - Create a 'convert' function from old versions to newest
       LogUtils.error('Data version different from current');
+    }
+  }
+
+  public export(): string {
+    return JSON.stringify([this.data, this.assetCatalogue]);
+  }
+
+  public async import(s: string): Promise<boolean> {
+    try {
+      const o = JSON.parse(s);
+      this.data = this.convertToBig(o[0]);
+      this.assetCatalogue = o[1];
+      await StorageUtils.setJSON(Keys.DATA, this.data);
+      await StorageUtils.setJSONUnsafe(
+        Keys.ASSET_CATALOGUE,
+        this.assetCatalogue
+      );
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 

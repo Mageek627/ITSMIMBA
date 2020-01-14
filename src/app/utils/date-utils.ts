@@ -103,9 +103,7 @@ export class DateUtils {
     if (!workingDaysOnly) {
       return date;
     }
-    console.log(date, this.isHoliday(date, holidays));
     while (this.isHoliday(date, holidays)) {
-      console.log(date, this.isHoliday(date, holidays));
       date = DateUtils.addDaysSimple(date, 1);
     }
     return date;
