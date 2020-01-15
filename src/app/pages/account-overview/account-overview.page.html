@@ -18,31 +18,25 @@
     <ion-button (click)="presentModalPayment()">Add payment</ion-button>
   </div>
   <ion-content style="flex-grow : 1;">
-    <!-- {{ account.name }} account, in {{ account.assetRef.code }}<br /><br /><br />
-    List of transactions:<br />
-    <ul>
-      <li *ngFor="let transfer of sortedTransfers">
-        {{ textTransfer(transfer) }}
-      </li>
-    </ul><br /><br /> -->
     <div *ngFor="let x of transfersByDay">
-      <ion-text color="medium">{{ relevantDate(x[0]) | date:'longDate'}}</ion-text>
+      <ion-text color="medium">{{ relevantDate(x[0][0]) | date:'longDate'}}</ion-text>
       <ion-card *ngFor="let t of x">
-        <ion-grid>
+        <ion-grid class="--ion-grid-padding: 0px;">
           <ion-row class="ion-align-items-center">
             <ion-col>
               <div class="ion-text-left">
-                <ion-label color="medium">{{ relevantDate(t) | date:'shortTime'}}</ion-label>
+                <ion-label color="medium">{{ relevantDate(t[0]) | date:'shortTime'}}</ion-label>
               </div>
             </ion-col>
             <ion-col>
               <div class="ion-text-center">
-                <ion-label color="dark">{{ t.label }}</ion-label>
+                <ion-label color="dark">{{ nonNullLabel(t) }}</ion-label>
               </div>
             </ion-col>
             <ion-col class="ion-text-right">
-              <ion-badge [color]="MathsUtils.negative(relevantAmount(t)) ? 'danger' : 'success'">
-                {{ formattedAmount(t) }}</ion-badge>
+              <ion-badge [color]="MathsUtils.negative(MathsUtils.relevantAmount(t[0], accountNumber)) ? 'danger' : 'success'">
+                {{ formattedAmount(t[0]) }}</ion-badge>
+              <ion-badge color="light" style="font-weight:normal;"> = {{ t[1] }}</ion-badge>
             </ion-col>
           </ion-row>
         </ion-grid>

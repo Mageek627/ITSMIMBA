@@ -1,5 +1,6 @@
 import { FormControl } from '@angular/forms';
 import Big from 'big.js';
+import { Transfer } from '../models/transfer';
 
 export class MathsUtils {
   constructor() {}
@@ -18,6 +19,16 @@ export class MathsUtils {
       safeValue = safeValue.abs();
     }
     return safeValue;
+  }
+
+  public static relevantAmount(t: Transfer, n: number): Big | null {
+    if (t.to === n) {
+      return t.amountDestination;
+    }
+    if (t.from === n) {
+      return t.amountOrigin ? t.amountOrigin.times(-1) : null;
+    }
+    return null;
   }
 
   public static positiveNumberValidator(c: FormControl): any {

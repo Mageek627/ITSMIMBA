@@ -7,6 +7,8 @@ export class Account {
   constructor(
     public name: string, // Must be unique
     public assetRef: AssetReference,
+    public initialAmount: string,
+    public timeOfInitial: number,
     public includedInOverview: boolean = true,
     public externalTransfers: Transfer[] = [],
     public externalLimits: Limit[] = [],

@@ -79,6 +79,18 @@ export class AddTransactionPage {
         0
       );
     }
+    const account = this.userDataService.accounts[this.accountNumber];
+    const oldGenesis = account.timeOfInitial;
+    if (DateUtils.toTimestamp(dateOfTransaction) <= oldGenesis) {
+      account.timeOfInitial = DateUtils.toTimestamp(dateOfTransaction) - 1;
+      const y = MathsUtils.relevantAmount(t, this.accountNumber);
+      const x = MathsUtils.safeBig(account.initialAmount);
+      if (x === null || y === null) {
+        LogUtils.error('initialAmount or new value is null !');
+      } else {
+        account.initialAmount = x.add(y.times(-1)).toString();
+      }
+    }
     await this.userDataService.addTransfer(t);
     await this.dismissItself();
     await this.logUtils.toast('Transaction added');

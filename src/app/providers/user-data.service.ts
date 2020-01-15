@@ -28,11 +28,15 @@ export class UserDataService {
   private async create_dummy_accounts(): Promise<void> {
     const dummyA = new Account(
       'Test 1',
-      new AssetReference(AssetType.Fiat, 'USD')
+      new AssetReference(AssetType.Fiat, 'USD'),
+      '0',
+      DateUtils.now()
     );
     const dummyB = new Account(
       'Test 2',
       new AssetReference(AssetType.Crypto, 'ETH'),
+      '2',
+      DateUtils.now(),
       true,
       [new Transfer('Hey', null, 1, null, new Big('1.2'), DateUtils.now(), 0)]
     );
@@ -63,7 +67,7 @@ export class UserDataService {
     this.assetCatalogue = [fiatCatalogue, cryptoCatalogue, [], [], []];
     await StorageUtils.setJSONUnsafe(Keys.ASSET_CATALOGUE, this.assetCatalogue);
     this.data = newData;
-    await this.create_dummy_accounts();
+    // await this.create_dummy_accounts();
   }
 
   private convertToBig(x: any): any {
@@ -95,6 +99,9 @@ export class UserDataService {
     for (const i of x.user.infiniteRecurringTransfers) {
       i.transfer.amountOrigin = b(i.transfer.amountOrigin);
       i.transfer.amountDestination = b(i.transfer.amountDestination);
+    }
+    for (let i = 0; i < x.user.holidays.length; i++) {
+      x.user.holidays[i] = new Date(x.user.holidays[i]);
     }
     return x;
   }
@@ -131,8 +138,18 @@ export class UserDataService {
     }
   }
 
-  public async createAccount(name: string, assetType: AssetType, code: string) {
-    const newAccount = new Account(name, new AssetReference(assetType, code));
+  public async createAccount(
+    name: string,
+    assetType: AssetType,
+    code: string,
+    initial: string
+  ) {
+    const newAccount = new Account(
+      name,
+      new AssetReference(assetType, code),
+      initial,
+      DateUtils.now()
+    );
     const id = this.data.user.accountsGraph.accounts.length;
     this.data.user.accountsGraph.accounts.push(newAccount);
     await StorageUtils.setJSON(Keys.DATA, this.data);

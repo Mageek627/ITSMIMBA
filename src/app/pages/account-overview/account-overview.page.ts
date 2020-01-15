@@ -27,7 +27,7 @@ export class AccountOverviewPage {
   public accountNumber: number;
   public DateUtils = DateUtils;
   public sortedTransfers: Transfer[];
-  public transfersByDay: Transfer[][];
+  public transfersByDay: [Transfer, string | null][][];
   public MathsUtils = MathsUtils;
 
   constructor(
@@ -54,18 +54,8 @@ export class AccountOverviewPage {
     return new Date(relevantTimestamp * 1000);
   }
 
-  public relevantAmount(t: Transfer): Big | null {
-    if (t.to === this.accountNumber) {
-      return t.amountDestination;
-    }
-    if (t.from === this.accountNumber) {
-      return t.amountOrigin ? t.amountOrigin.times(-1) : null;
-    }
-    return null;
-  }
-
   public formattedAmount(t: Transfer): string {
-    const b = this.relevantAmount(t);
+    const b = MathsUtils.relevantAmount(t, this.accountNumber);
     return b
       ? (!MathsUtils.negative(b) ? '+' : '') +
           b.toString() +
@@ -85,9 +75,20 @@ export class AccountOverviewPage {
       ),
       this.accountNumber
     );
+    this.sortedTransfers.unshift(
+      new Transfer(
+        'Initial amount',
+        null,
+        this.accountNumber,
+        null,
+        MathsUtils.safeBig(this.account.initialAmount),
+        this.account.timeOfInitial,
+        0
+      )
+    );
     let i = -1;
     let currentDate: Date | null = null;
-    let tempArray = [];
+    let tempArray: [Transfer, string | null][] = [];
     for (const t of this.sortedTransfers) {
       const preciseDate = this.relevantDate(t);
       if (!DateUtils.datesAreOnSameDay(currentDate, preciseDate)) {
@@ -96,10 +97,26 @@ export class AccountOverviewPage {
         this.transfersByDay.push(tempArray);
         tempArray = [];
       }
-      tempArray.push(t);
+      const values: [Transfer, null] = [t, null];
+      tempArray.push(values);
     }
     this.transfersByDay.push(tempArray);
     this.transfersByDay.shift();
+    let sum = new Big(0);
+    for (const d of this.transfersByDay) {
+      for (const tuple of d) {
+        const a = MathsUtils.relevantAmount(tuple[0], this.accountNumber);
+        if (a !== null) {
+          sum = sum.add(a);
+          tuple[1] = sum.toString();
+        }
+      }
+    }
+  }
+
+  // Only necessary to assert non null label
+  public nonNullLabel(tuple: [Transfer, string | null]): string {
+    return tuple[0].label;
   }
 
   private filtered(arr: Transfer[], n: number): Transfer[] {

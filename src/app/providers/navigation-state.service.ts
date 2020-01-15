@@ -71,6 +71,11 @@ export class NavigationStateService {
     }
   }
 
+  public resetToHomePage(): void {
+    this.history = [];
+    this.navCtrl.navigateRoot('/home');
+  }
+
   public dismissModal(): void {
     this.modalCtrl.dismiss();
     this.history.splice(this.history.length - 1, 1);

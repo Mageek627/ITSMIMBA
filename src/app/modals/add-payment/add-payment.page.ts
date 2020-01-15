@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Constants } from '../../data/constants';
 import { Occurrence } from '../../enums/occurrence.enum';
@@ -17,9 +22,13 @@ import { MathsUtils } from '../../utils/maths-utils';
   styleUrls: ['./add-payment.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddPaymentPage {
+export class AddPaymentPage implements OnInit {
   public addPaymentForm: FormGroup;
   @Input() accountNumber: number;
+  public plural = '';
+  private testSpan: HTMLSpanElement;
+  public inputStyle = '25px';
+  public displayValue = 'month';
 
   constructor(
     private logUtils: LogUtils,
@@ -34,11 +43,57 @@ export class AddPaymentPage {
         Validators.pattern(Constants.moneyRegex)
       ]),
       startDate: new FormControl(new Date().toJSON(), Validators.required),
-      occurrence: new FormControl('', Validators.required),
-      howMany: new FormControl(''),
-      factor: new FormControl(''),
+      occurrence: new FormControl('Monthly', Validators.required),
+      howMany: new FormControl('', [Validators.required, this.howManyTest]),
+      factor: new FormControl('1', [
+        Validators.required,
+        MathsUtils.positiveNumberValidator
+      ]),
       workingDaysOnly: new FormControl('true', Validators.required)
     });
+  }
+
+  ngOnInit() {
+    const elem = document.getElementById('testSpan');
+    if (elem === null) {
+      LogUtils.error('testSpan not found');
+    } else {
+      this.testSpan = elem;
+    }
+  }
+
+  public changeWidth() {
+    this.testSpan.innerText = this.addPaymentForm.controls.factor.value;
+    this.inputStyle = this.testSpan.offsetWidth + 16 + 'px';
+    const intValue = parseInt(this.addPaymentForm.controls.factor.value, 10);
+    if (this.addPaymentForm.controls.factor.value !== intValue + '') {
+      this.plural = '';
+    } else if (intValue === 1) {
+      this.plural = '';
+    } else {
+      this.plural = 's';
+    }
+    switch (this.addPaymentForm.controls.occurrence.value) {
+      case 'Monthly':
+        this.displayValue = 'month';
+        break;
+      case 'Yearly':
+        this.displayValue = 'year';
+        break;
+      case 'Weekly':
+        this.displayValue = 'week';
+        break;
+      case 'Daily':
+        this.displayValue = 'day';
+        break;
+      case 'EverySecond':
+        this.displayValue = 'second';
+        break;
+      default:
+        this.displayValue = 'error';
+        break;
+    }
+    this.displayValue += this.plural;
   }
 
   public howManyTest(c: FormControl): any {
@@ -92,17 +147,33 @@ export class AddPaymentPage {
     } else {
       const arr: Transfer[] = [];
       let calculatedDate = start;
+      const account = this.userDataService.accounts[this.accountNumber];
+      const oldGenesis = account.timeOfInitial;
       for (let i = 0; i < h; i++) {
         const actualDate = this.dateUtils.addHolidays(
           calculatedDate,
           this.addPaymentForm.controls.workingDaysOnly.value === 'true',
           this.userDataService.holidays
         );
+        const y = MathsUtils.safeBig(
+          this.addPaymentForm.controls.valueOfPayment.value
+        );
+        if (DateUtils.toTimestamp(actualDate) <= oldGenesis) {
+          if (i === 0) {
+            account.timeOfInitial = DateUtils.toTimestamp(actualDate) - 1;
+          }
+          const x = MathsUtils.safeBig(account.initialAmount);
+          if (x === null || y === null) {
+            LogUtils.error('initialAmount or valueOfPayment is null !');
+          } else {
+            account.initialAmount = x.add(y).toString();
+          }
+        }
         const t = new Transfer(
           this.addPaymentForm.controls.labelOfPayment.value,
           this.accountNumber,
           null,
-          MathsUtils.safeBig(this.addPaymentForm.controls.valueOfPayment.value),
+          y,
           null,
           DateUtils.toTimestamp(actualDate),
           0

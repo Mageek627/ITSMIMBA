@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ViewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { AlertController, IonTextarea } from '@ionic/angular';
 import { UserDataService } from 'src/app/providers/user-data.service';
@@ -28,8 +23,7 @@ export class SettingsPage {
     public navigationStateService: NavigationStateService,
     private userDataService: UserDataService,
     private logUtils: LogUtils,
-    private alertCtrl: AlertController,
-    private cdr: ChangeDetectorRef
+    private alertCtrl: AlertController
   ) {}
 
   public export(): void {
@@ -81,9 +75,7 @@ export class SettingsPage {
 
   public async importStepTwo(): Promise<void> {
     if (await this.userDataService.import(this.jsonCode)) {
-      this.jsonCode = '';
-      this.textareaVisible = false;
-      this.cdr.detectChanges();
+      this.navigationStateService.resetToHomePage();
       this.logUtils.toast('Data imported successfully');
     } else {
       this.logUtils.toast('Error');

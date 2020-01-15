@@ -11,6 +11,8 @@
   </ion-toolbar>
 </ion-header>
 
+<span id="testSpan" style="position:absolute;top:0px;left:0px;visibility: hidden;" >1</span>
+
 <ion-content class="ion-padding">
   <form [formGroup]="addPaymentForm" (ngSubmit)="onSubmit()">
     <ion-item>
@@ -19,7 +21,7 @@
     </ion-item>
     <ion-item>
       <ion-label>Value:</ion-label>
-      <ion-input class="ion-text-end" formControlName="valueOfPayment"></ion-input>
+      <ion-input placeholder="..." class="ion-text-end" formControlName="valueOfPayment"></ion-input>
       {{ '&nbsp;'+userDataService.accounts[accountNumber].assetRef.code }}
     </ion-item>
     <ion-item>
@@ -30,26 +32,22 @@
       <ion-label>Working days only:</ion-label>
       <ion-checkbox formControlName="workingDaysOnly"></ion-checkbox>
     </ion-item>
-    <ion-item>
-      <ion-label>Occurrence:</ion-label>
-      <ion-select placeholder="Select" formControlName="occurrence">
-        <ion-select-option value="EverySecond">Every second</ion-select-option>
-        <ion-select-option value="Daily">Daily</ion-select-option>
-        <ion-select-option value="Weekly">Weekly</ion-select-option>
-        <ion-select-option value="Monthly">Monthly</ion-select-option>
-        <ion-select-option value="Yearly">Yearly</ion-select-option>
+    <ion-item (ionChange)="changeWidth()" >
+      <ion-label slot="start">Repeats:</ion-label>
+      <ion-label slot="end">every</ion-label>
+      <ion-input #factorInput class="ion-no-margin ion-text-center" placeholder="..." slot="end" [style.maxWidth]="inputStyle" style="min-width: 25px;--padding-start: 3px; --padding-end:3px;" formControlName="factor"></ion-input>
+      <ion-select [selectedText]="displayValue" class="ion-no-margin" slot="end" placeholder="Select" formControlName="occurrence">
+        <ion-select-option value="EverySecond">second{{ plural }}</ion-select-option>
+        <ion-select-option value="Daily">day{{ plural }}</ion-select-option>
+        <ion-select-option value="Weekly">week{{ plural }}</ion-select-option>
+        <ion-select-option value="Monthly">month{{ plural }}</ion-select-option>
+        <ion-select-option value="Yearly">year{{ plural }}</ion-select-option>
       </ion-select>
     </ion-item>
-    <div [hidden]='addPaymentForm.controls.occurrence.value===undefined || addPaymentForm.controls.occurrence.value==="" || addPaymentForm.controls.occurrence.value==="One"'>
-      <ion-item>
-        <ion-label>Factor:</ion-label>
-        <ion-input class="ion-text-end" formControlName="factor" ></ion-input>
-      </ion-item>
       <ion-item>
         <ion-label>How many times:</ion-label>
-        <ion-input class="ion-text-end" formControlName="howMany" ></ion-input>
+        <ion-input class="ion-text-end" formControlName="howMany"></ion-input>
       </ion-item>
-    </div>
     <div style="text-align:center;">
       <ion-button type="submit" [disabled]="!addPaymentForm.valid">Add</ion-button>
     </div>

@@ -2,10 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Constants } from '../../data/constants';
 import { AssetType } from '../../enums/asset-type.enum';
-import { Transfer } from '../../models/transfer';
 import { NavigationStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
-import { DateUtils } from '../../utils/date-utils';
 import { LogUtils } from '../../utils/log-utils';
 import { MathsUtils } from '../../utils/maths-utils';
 
@@ -28,8 +26,14 @@ export class AddAccountPage {
   ) {
     this.addAccountForm = new FormGroup({
       nameOfAccount: new FormControl('', Validators.required),
-      typeChoice: new FormControl('', Validators.required),
-      codeChoice: new FormControl('', Validators.required),
+      typeChoice: new FormControl(
+        Constants.assetTypeFullName[0][0],
+        Validators.required
+      ),
+      codeChoice: new FormControl(
+        this.userDataService.assetCatalogue[0][0].assetRef.code,
+        Validators.required
+      ),
       currentValue: new FormControl('', [
         Validators.required,
         Validators.pattern(Constants.moneyRegex)
@@ -55,26 +59,24 @@ export class AddAccountPage {
       }
       return;
     }
-    const id = await this.userDataService.createAccount(
-      this.addAccountForm.controls.nameOfAccount.value,
-      AssetType[
-        this.addAccountForm.controls.typeChoice.value as keyof typeof AssetType
-      ],
-      this.addAccountForm.controls.codeChoice.value
+    const a = MathsUtils.safeBig(
+      this.addAccountForm.controls.currentValue.value
     );
-    await this.userDataService.addTransfer(
-      new Transfer(
-        'Initial amount',
-        null,
-        id,
-        null,
-        MathsUtils.safeBig(this.addAccountForm.controls.currentValue.value),
-        DateUtils.now(),
-        0
-      )
-    );
-    await this.dismissItself();
-    await this.logUtils.toast('Account created successfully');
+    if (a !== null) {
+      const id = await this.userDataService.createAccount(
+        this.addAccountForm.controls.nameOfAccount.value,
+        AssetType[
+          this.addAccountForm.controls.typeChoice
+            .value as keyof typeof AssetType
+        ],
+        this.addAccountForm.controls.codeChoice.value,
+        a.toString()
+      );
+      await this.dismissItself();
+      await this.logUtils.toast('Account created successfully');
+    } else {
+      LogUtils.error('Initial amount is null');
+    }
   }
 
   public async dismissItself(): Promise<void> {
