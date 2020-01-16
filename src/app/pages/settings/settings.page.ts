@@ -30,7 +30,7 @@ export class SettingsPage {
     this.textareaVisible = true;
     this.jsonCode = this.userDataService.export();
     this.isExporting = true;
-    this.codeTextarea.getInputElement().then(x => x.select());
+    // this.codeTextarea.getInputElement().then(x => x.select());
   }
 
   public importStepOne(): void {
@@ -64,12 +64,43 @@ export class SettingsPage {
       .then(x => x.present());
   }
 
+  public confirmDelete() {
+    this.alertCtrl
+      .create({
+        header: 'Please enter the name of the account you wish to delete:',
+        inputs: [
+          {
+            name: 'name',
+            type: 'text'
+          }
+        ],
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel'
+          },
+          {
+            text: 'Ok',
+            handler: promptData => {
+              if (this.userDataService.deleteAccount(promptData.name)) {
+                this.navigationStateService.resetToHomePage();
+                this.logUtils.toast('Account deleted successfully');
+                return true;
+              }
+              return false;
+            }
+          }
+        ]
+      })
+      .then(x => x.present());
+  }
+
   public copy() {
     Plugins.Clipboard.write({
       string: this.jsonCode
     }).then(() => {
       this.logUtils.toast('Copied');
-      this.codeTextarea.getInputElement().then(x => x.select());
+      // this.codeTextarea.getInputElement().then(x => x.select());
     });
   }
 

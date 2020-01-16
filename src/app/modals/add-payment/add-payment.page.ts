@@ -144,6 +144,7 @@ export class AddPaymentPage implements OnInit {
           this.addPaymentForm.controls.workingDaysOnly.value === 'true'
         )
       );
+      // TODO: add it
     } else {
       const arr: Transfer[] = [];
       let calculatedDate = start;

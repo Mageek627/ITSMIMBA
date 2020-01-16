@@ -196,6 +196,27 @@ export class UserDataService {
     return id;
   }
 
+  private del(i: number) {
+    // TODO: a much much deeper analysis is needed for internal transfers/limits
+    this.data.user.accountsGraph.accounts.splice(i, 1);
+  }
+
+  public deleteAccount(s: string) {
+    let i = 0;
+    for (; i < this.data.user.accountsGraph.accounts.length; i++) {
+      if (this.data.user.accountsGraph.accounts[i].name === s) {
+        break;
+      }
+    }
+    if (i < this.data.user.accountsGraph.accounts.length) {
+      this.del(i);
+      this.saveData();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   private addTransferNoSave(transfer: Transfer): void {
     if (transfer.from === null && transfer.to !== null) {
       this.data.user.accountsGraph.accounts[transfer.to].externalTransfers.push(
