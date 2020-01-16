@@ -65,8 +65,13 @@ export class UserDataService {
     const newData = new Data(newUser);
     this.assetCatalogue = [fiatCatalogue, cryptoCatalogue, [], [], []];
     this.data = newData;
-    await this.saveData();
+    await this.saveAll();
     // await this.create_dummy_accounts();
+  }
+
+  public changeName(n: number, s: string) {
+    this.data.user.accountsGraph.accounts[n].name = s;
+    this.saveData();
   }
 
   public removeTransferNoSave(
@@ -103,6 +108,9 @@ export class UserDataService {
 
   public async saveData(): Promise<void> {
     await StorageUtils.setJSON(Keys.DATA, this.data);
+  }
+  public async saveAll(): Promise<void> {
+    await this.saveData();
     await StorageUtils.setJSONUnsafe(Keys.ASSET_CATALOGUE, this.assetCatalogue);
   }
 
@@ -163,7 +171,7 @@ export class UserDataService {
       const o = JSON.parse(s);
       this.data = this.convertToBig(o[0]);
       this.assetCatalogue = o[1];
-      await this.saveData();
+      await this.saveAll();
       return true;
     } catch (e) {
       return false;

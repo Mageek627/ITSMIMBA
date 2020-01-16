@@ -4,8 +4,10 @@ import {
   Component
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Big } from 'big.js';
+import { GeneralUtils } from 'src/app/utils/general-utils';
+import { LogUtils } from 'src/app/utils/log-utils';
 import { MathsUtils } from 'src/app/utils/maths-utils';
 import { Occurrence } from '../../enums/occurrence.enum';
 import { AddPaymentPage } from '../../modals/add-payment/add-payment.page';
@@ -30,6 +32,7 @@ export class AccountOverviewPage {
   public transfersByDay: [Transfer, string | null][][];
   public MathsUtils = MathsUtils;
   public currentValue: string;
+  private toasted = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -37,7 +40,9 @@ export class AccountOverviewPage {
     private modalCtrl: ModalController,
     public navigationStateService: NavigationStateService,
     private cdr: ChangeDetectorRef,
-    private dateUtils: DateUtils
+    private dateUtils: DateUtils,
+    public alertCtrl: AlertController,
+    private logUtils: LogUtils
   ) {
     this.activatedRoute.params.subscribe(params => {
       // Getting value from url parameter
@@ -45,6 +50,53 @@ export class AccountOverviewPage {
       this.account = this.userDataService.accounts[this.accountNumber];
       this.updateTransfers();
     });
+  }
+
+  public changeName() {
+    this.alertCtrl
+      .create({
+        inputs: [
+          {
+            name: 'name',
+            type: 'text',
+            value: this.account.name,
+            placeholder: 'New name'
+          }
+        ],
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel'
+          },
+          {
+            text: 'Ok',
+            handler: promptData => {
+              if (promptData.name !== '') {
+                if (
+                  GeneralUtils.duplicateAccountName(
+                    promptData.name,
+                    this.userDataService.accounts,
+                    this.account.name
+                  )
+                ) {
+                  if (!this.toasted) {
+                    this.logUtils.toast('Account name already used');
+                    this.toasted = true;
+                    setTimeout(() => (this.toasted = false), 2000);
+                  }
+                  return false;
+                } else {
+                  this.userDataService.changeName(
+                    this.accountNumber,
+                    promptData.name
+                  );
+                }
+              }
+            }
+          }
+        ]
+      })
+      .then(x => x.present());
   }
 
   public formattedAmount(t: Transfer): string {

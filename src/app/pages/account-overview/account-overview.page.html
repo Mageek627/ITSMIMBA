@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button (click)="this.navigationStateService.goBackHistoryOnly()"></ion-back-button>
     </ion-buttons>
-    <ion-title class="centered-title">
+    <ion-title (click)="changeName()" button="true" class="centered-title">
       {{ account.name }} ({{ currentValue }} {{ account.assetRef.code }})
     </ion-title>
     <ion-buttons slot="end">

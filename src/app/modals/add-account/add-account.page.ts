@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { GeneralUtils } from 'src/app/utils/general-utils';
 import { Constants } from '../../data/constants';
 import { AssetType } from '../../enums/asset-type.enum';
 import { NavigationStateService } from '../../providers/navigation-state.service';
@@ -41,17 +42,13 @@ export class AddAccountPage {
     });
   }
 
-  public duplicateAccountName(): boolean {
-    for (const a of this.userDataService.accounts) {
-      if (this.addAccountForm.controls.nameOfAccount.value === a.name) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   public async onSubmit(): Promise<void> {
-    if (this.duplicateAccountName()) {
+    if (
+      GeneralUtils.duplicateAccountName(
+        this.addAccountForm.controls.nameOfAccount.value,
+        this.userDataService.accounts
+      )
+    ) {
       if (!this.toasted) {
         this.logUtils.toast('Account name already used');
         this.toasted = true;
