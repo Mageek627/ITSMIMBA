@@ -19,7 +19,7 @@
     </ion-item>
     <ion-item>
       <ion-label>Type:</ion-label>
-      <ion-select style="max-width: 100%;" formControlName="typeChoice" (ionChange)="changeDefaultCode()"
+      <ion-select interface="popover" style="max-width: 100%;" formControlName="typeChoice" (ionChange)="changeDefaultCode(n())"
         placeholder="Select">
         <ion-select-option *ngFor="let assetType of Constants.assetTypeFullName" [value]="assetType[0]">
           {{ assetType[1] }}</ion-select-option>
@@ -28,16 +28,24 @@
     <ion-item>
       <ion-label>Current value:</ion-label>
       <ion-input inputmode="decimal" placeholder="..." class="ion-text-end" formControlName="currentValue"></ion-input>
-      <ion-select [interfaceOptions]="{header: addAccountForm.controls.typeChoice.value}" [selectedText]="'&nbsp;'+addAccountForm.controls.codeChoice.value" class="ion-no-margin" placeholder="Select" formControlName="codeChoice">
-        <div
-          *ngIf='addAccountForm.controls.typeChoice.value!==undefined && addAccountForm.controls.typeChoice.value!==""'>
-          <ion-select-option
-            *ngFor="let assetDef of userDataService.assetCatalogue[AssetType[addAccountForm.controls.typeChoice.value]]"
-            [value]="assetDef.assetRef.code">{{ assetDef.assetRef.code }}
-            {{ assetDef.name!=='' ? '('+assetDef.name+')' : ''}}
-          </ion-select-option>
-        </div>
-      </ion-select>
+      <ionic-selectable #ionicSelectableComponent [searchFailText]="'No '+Constants.assetTypeFullName[n()][1].toLowerCase()+' found'" (onChange)="cdr.detectChanges()" [items]="ionSelectableOptions"
+        itemValueField="id" itemTextField="name" formControlName="codeChoice" canSearch="true">
+        <ng-template ionicSelectableValueTemplate let-v="value">
+          {{ displayText(v.id) }}
+        </ng-template>
+        <ng-template ionicSelectableHeaderTemplate>
+          <ion-toolbar>
+            <ion-buttons>
+              <ion-button (click)="ionicSelectableComponent.close()">
+                Close
+              </ion-button>
+            </ion-buttons>
+            <ion-title class="centered-title">
+              {{ Constants.assetTypeFullName[n()][1]+':' }}
+            </ion-title>
+          </ion-toolbar>
+        </ng-template>
+      </ionic-selectable>
     </ion-item>
     <div style="text-align:center;">
       <ion-button type="submit" [disabled]="!addAccountForm.valid">Add</ion-button>

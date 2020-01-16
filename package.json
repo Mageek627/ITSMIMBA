@@ -26,6 +26,7 @@
     "big.js": "^5.2.2",
     "capacitor-secure-storage-plugin": "^0.3.0",
     "core-js": "^3.6.1",
+    "ionic-selectable": "^4.5.0",
     "rxjs": "^6.5.4",
     "serialize-javascript": "^2.1.2",
     "tslib": "^1.10.0",

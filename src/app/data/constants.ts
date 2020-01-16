@@ -4,7 +4,7 @@ export class Constants {
   public static baseCurrency = 'USD';
 
   public static assetTypeFullName = [
-    ['Fiat', 'Fiat money (Regular)'],
+    ['Fiat', 'Currency'],
     ['Crypto', 'Cryptocurrency'],
     ['Metal', 'Metal'],
     ['Stock', 'Stock'],
