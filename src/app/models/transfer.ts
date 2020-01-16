@@ -8,6 +8,7 @@ export class Transfer {
     public amountOrigin: Big | null, // Limited to decimal scale
     public amountDestination: Big | null, // Limited to decimal scale
     public timestampDeparture: number, // If the event happens on a day, then 00:00:00
-    public delayForArrival: number
+    public delayForArrival: number,
+    public id: number = 0 // Unique
   ) {}
 }

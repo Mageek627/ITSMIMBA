@@ -21,7 +21,7 @@
     <p>Please copy the following backup text and keep it somewhere safe:</p>
   </div>
   <ion-item [hidden]="!textareaVisible">
-    <ion-textarea #codeTextarea [value]="jsonCode" [(ngModel)]="jsonCode" rows="8" [placeholder]="placeholder">
+    <ion-textarea #codeTextarea [value]="jsonCode" [(ngModel)]="jsonCode" rows="5" [placeholder]="placeholder">
     </ion-textarea>
   </ion-item><br />
   <div style="text-align: center;" [hidden]="isExporting || !textareaVisible">

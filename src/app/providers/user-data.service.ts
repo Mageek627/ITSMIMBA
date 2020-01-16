@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Big } from 'big.js';
 import { Constants } from '../data/constants';
 import { cryptoCatalogue } from '../data/crypto-catalogue';
 import { fiatCatalogue } from '../data/fiat-catalogue';
@@ -36,12 +35,13 @@ export class UserDataService {
       'Test 2',
       new AssetReference(AssetType.Crypto, 'ETH'),
       '2',
-      DateUtils.now(),
-      true,
-      [new Transfer('Hey', null, 1, null, new Big('1.2'), DateUtils.now(), 0)]
+      DateUtils.now()
     );
     this.data.user.accountsGraph.accounts.push(dummyA, dummyB);
     await StorageUtils.setJSON(Keys.DATA, this.data);
+    await this.addTransfer(
+      new Transfer('Hey', null, 1, null, new Big('1.2'), DateUtils.now(), 0)
+    );
   }
 
   get accounts(): Account[] {
@@ -63,11 +63,47 @@ export class UserDataService {
     );
     newUser.holidays = [new Date('2020-12-25'), new Date('2021-01-01')];
     const newData = new Data(newUser);
-    await StorageUtils.setJSON(Keys.DATA, newData);
     this.assetCatalogue = [fiatCatalogue, cryptoCatalogue, [], [], []];
-    await StorageUtils.setJSONUnsafe(Keys.ASSET_CATALOGUE, this.assetCatalogue);
     this.data = newData;
+    await this.saveData();
     // await this.create_dummy_accounts();
+  }
+
+  public removeTransferNoSave(
+    obj: { external: boolean; index: number },
+    n: number
+  ): void {
+    if (obj.external) {
+      console.log(this.data.user.accountsGraph.accounts[n].externalTransfers);
+      this.data.user.accountsGraph.accounts[n].externalTransfers.splice(
+        obj.index,
+        1
+      );
+      console.log(this.data.user.accountsGraph.accounts[n].externalTransfers);
+    } else {
+      this.data.user.accountsGraph.internalTransfers.splice(obj.index, 1);
+    }
+  }
+
+  public async addTransferSpecificPlace(
+    obj: { external: boolean; index: number },
+    n: number,
+    t: Transfer
+  ): Promise<void> {
+    if (obj.external) {
+      this.data.user.accountsGraph.accounts[n].externalTransfers.splice(
+        obj.index,
+        0,
+        t
+      );
+    } else {
+      this.data.user.accountsGraph.internalTransfers.splice(obj.index, 0, t);
+    }
+  }
+
+  public async saveData(): Promise<void> {
+    await StorageUtils.setJSON(Keys.DATA, this.data);
+    await StorageUtils.setJSONUnsafe(Keys.ASSET_CATALOGUE, this.assetCatalogue);
   }
 
   private convertToBig(x: any): any {
@@ -127,11 +163,7 @@ export class UserDataService {
       const o = JSON.parse(s);
       this.data = this.convertToBig(o[0]);
       this.assetCatalogue = o[1];
-      await StorageUtils.setJSON(Keys.DATA, this.data);
-      await StorageUtils.setJSONUnsafe(
-        Keys.ASSET_CATALOGUE,
-        this.assetCatalogue
-      );
+      await this.saveData();
       return true;
     } catch (e) {
       return false;
@@ -171,12 +203,16 @@ export class UserDataService {
   }
 
   public async addTransfer(transfer: Transfer): Promise<void> {
+    transfer.id = this.data.user.transfersUniqueId++;
     this.addTransferNoSave(transfer);
     await StorageUtils.setJSON(Keys.DATA, this.data);
   }
 
   public async addManyTransfers(arr: Transfer[]): Promise<void> {
-    arr.forEach((x: Transfer) => this.addTransferNoSave(x));
+    arr.forEach((x: Transfer) => {
+      x.id = this.data.user.transfersUniqueId++;
+      this.addTransferNoSave(x);
+    });
     await StorageUtils.setJSON(Keys.DATA, this.data);
   }
 }

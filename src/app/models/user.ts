@@ -11,6 +11,7 @@ export class User {
     public valuations: Valuation[][] = [], // valuations[type][code_id][val_id]==valuation
     public holidays: Date[] = [],
     public infiniteRecurringTransfers: InfiniteRecurringTransfer[] = [],
-    public simulatedUntil: number = DateUtils.now() // We have generated the infinite recurring transfers until this date
+    public simulatedUntil: number = DateUtils.now(), // We have generated the infinite recurring transfers until this date
+    public transfersUniqueId: number = 0
   ) {}
 }

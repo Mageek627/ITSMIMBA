@@ -29,6 +29,7 @@ export class AccountOverviewPage {
   public sortedTransfers: Transfer[];
   public transfersByDay: [Transfer, string | null][][];
   public MathsUtils = MathsUtils;
+  public currentValue: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -46,22 +47,9 @@ export class AccountOverviewPage {
     });
   }
 
-  public relevantDate(t: Transfer): Date {
-    let relevantTimestamp = t.timestampDeparture;
-    if (t.to === this.accountNumber) {
-      relevantTimestamp += t.delayForArrival;
-    }
-    return new Date(relevantTimestamp * 1000);
-  }
-
   public formattedAmount(t: Transfer): string {
     const b = MathsUtils.relevantAmount(t, this.accountNumber);
-    return b
-      ? (!MathsUtils.negative(b) ? '+' : '') +
-          b.toString() +
-          ' ' +
-          this.account.assetRef.code
-      : '';
+    return b ? (!MathsUtils.negative(b) ? '+' : '') + b.toString() : '';
   }
 
   private updateTransfers(): void {
@@ -83,14 +71,15 @@ export class AccountOverviewPage {
         null,
         MathsUtils.safeBig(this.account.initialAmount),
         this.account.timeOfInitial,
-        0
+        0,
+        -1
       )
     );
     let i = -1;
     let currentDate: Date | null = null;
     let tempArray: [Transfer, string | null][] = [];
     for (const t of this.sortedTransfers) {
-      const preciseDate = this.relevantDate(t);
+      const preciseDate = DateUtils.relevantDate(t, this.accountNumber);
       if (!DateUtils.datesAreOnSameDay(currentDate, preciseDate)) {
         i++;
         currentDate = preciseDate;
@@ -109,6 +98,13 @@ export class AccountOverviewPage {
         if (a !== null) {
           sum = sum.add(a);
           tuple[1] = sum.toString();
+          if (
+            DateUtils.toTimestamp(
+              DateUtils.relevantDate(tuple[0], this.accountNumber)
+            ) <= DateUtils.now()
+          ) {
+            this.currentValue = tuple[1];
+          }
         }
       }
     }
@@ -220,7 +216,28 @@ export class AccountOverviewPage {
     const modal = await this.modalCtrl.create({
       component: AddTransactionPage,
       componentProps: {
-        accountNumber: this.accountNumber
+        accountNumber: this.accountNumber,
+        goalModify: false
+      }
+    });
+    await modal.present();
+    this.navigationStateService.history.push(null);
+    await modal.onWillDismiss();
+    this.updateTransfers();
+    this.cdr.detectChanges();
+  }
+  public async presentModalModifyTransaction(
+    i: number,
+    j: number
+  ): Promise<void> {
+    const trxId = this.transfersByDay[i][j][0].id;
+    const modal = await this.modalCtrl.create({
+      component: AddTransactionPage,
+      componentProps: {
+        accountNumber: this.accountNumber,
+        goalModify: true,
+        trxId,
+        sortedTransfers: trxId === -1 ? this.sortedTransfers : []
       }
     });
     await modal.present();

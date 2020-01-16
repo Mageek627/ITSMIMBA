@@ -36,6 +36,14 @@ export class DateUtils {
     return arr;
   }
 
+  public static relevantDate(t: Transfer, n: number): Date {
+    let relevantTimestamp = t.timestampDeparture;
+    if (t.to === n) {
+      relevantTimestamp += t.delayForArrival;
+    }
+    return new Date(relevantTimestamp * 1000);
+  }
+
   public static datesAreOnSameDay(first: Date | null, second: Date): boolean {
     if (first === null) {
       return false;
