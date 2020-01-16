@@ -33,3 +33,14 @@ ion-title.centered-title {
   height: 100%;
   text-align: center;
 }
+
+// Applies a text wrap on ion options
+.alert-tappable.alert-radio {
+  height: auto;
+  contain: content;
+}
+
+.alert-radio-label.sc-ion-alert-md,
+.alert-radio-label.sc-ion-alert-ios {
+  white-space: normal;
+}

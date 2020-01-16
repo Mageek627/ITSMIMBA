@@ -21,7 +21,7 @@
     </ion-item>
     <ion-item>
       <ion-label>Value:</ion-label>
-      <ion-input placeholder="..." class="ion-text-end" formControlName="valueOfPayment"></ion-input>
+      <ion-input inputmode="decimal" placeholder="..." class="ion-text-end" formControlName="valueOfPayment"></ion-input>
       {{ '&nbsp;'+userDataService.accounts[accountNumber].assetRef.code }}
     </ion-item>
     <ion-item>
@@ -35,7 +35,7 @@
     <ion-item (ionChange)="changeWidth()" >
       <ion-label slot="start">Repeats:</ion-label>
       <ion-label slot="end">every</ion-label>
-      <ion-input #factorInput class="ion-no-margin ion-text-center" placeholder="..." slot="end" [style.maxWidth]="inputStyle" style="min-width: 25px;--padding-start: 3px; --padding-end:3px;" formControlName="factor"></ion-input>
+      <ion-input inputmode="numeric" #factorInput class="ion-no-margin ion-text-center" placeholder="..." slot="end" [style.maxWidth]="inputStyle" style="min-width: 25px;--padding-start: 3px; --padding-end:3px;" formControlName="factor"></ion-input>
       <ion-select [selectedText]="displayValue" class="ion-no-margin" slot="end" placeholder="Select" formControlName="occurrence">
         <ion-select-option value="EverySecond">second{{ plural }}</ion-select-option>
         <ion-select-option value="Daily">day{{ plural }}</ion-select-option>
@@ -46,7 +46,7 @@
     </ion-item>
       <ion-item>
         <ion-label>How many times:</ion-label>
-        <ion-input class="ion-text-end" formControlName="howMany"></ion-input>
+        <ion-input inputmode="numeric" placeholder="..." class="ion-text-end" formControlName="howMany"></ion-input>
       </ion-item>
     <div style="text-align:center;">
       <ion-button type="submit" [disabled]="!addPaymentForm.valid">Add</ion-button>

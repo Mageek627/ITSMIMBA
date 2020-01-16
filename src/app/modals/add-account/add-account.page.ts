@@ -76,6 +76,15 @@ export class AddAccountPage {
     }
   }
 
+  public changeDefaultCode() {
+    const n =
+      AssetType[
+        this.addAccountForm.controls.typeChoice.value as keyof typeof AssetType
+      ];
+    const x = this.userDataService.assetCatalogue[n][0].assetRef.code;
+    this.addAccountForm.controls.codeChoice.setValue(x);
+  }
+
   public async dismissItself(): Promise<void> {
     await this.navigationStateService.dismissModal();
   }

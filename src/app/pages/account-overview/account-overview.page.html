@@ -3,8 +3,8 @@
     <ion-buttons slot="start">
       <ion-back-button (click)="this.navigationStateService.goBackHistoryOnly()"></ion-back-button>
     </ion-buttons>
-    <ion-title (click)="changeName()" button="true" class="centered-title">
-      {{ account.name }} ({{ currentValue }} {{ account.assetRef.code }})
+    <ion-title class="centered-title">
+      <span style="cursor: pointer;" (click)="changeName()">{{ account.name }} ({{ currentValue }} {{ account.assetRef.code }})</span>
     </ion-title>
     <ion-buttons slot="end">
       <ion-menu-button></ion-menu-button>
@@ -12,12 +12,12 @@
   </ion-toolbar>
 </ion-header>
 
-<div class="ion-padding" style="background: white;" id="outer">
+<div class="ion-padding" style="background-color: white;" id="outer">
   <div style="text-align:center;" class="ion-padding-bottom">
     <ion-button (click)="presentModalTransaction()">Add single transaction</ion-button>
     <ion-button (click)="presentModalPayment()">Add recurring payment</ion-button>
   </div>
-  <ion-content style="flex-grow : 1;">
+  <ion-content style="flex-grow : 1;--background: white;">
     <div *ngFor="let x of transfersByDay; index as i">
       <ion-text color="medium">{{ DateUtils.relevantDate(x[0][0], accountNumber) | date:'longDate'}}</ion-text>
       <ion-card button="true" (click)="presentModalModifyTransaction(i, j)" *ngFor="let t of x; index as j">

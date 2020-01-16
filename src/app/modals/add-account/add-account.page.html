@@ -19,15 +19,16 @@
     </ion-item>
     <ion-item>
       <ion-label>Type:</ion-label>
-      <ion-select formControlName="typeChoice" (ionChange)="addAccountForm.controls.codeChoice.reset()"
+      <ion-select style="max-width: 100%;" formControlName="typeChoice" (ionChange)="changeDefaultCode()"
         placeholder="Select">
         <ion-select-option *ngFor="let assetType of Constants.assetTypeFullName" [value]="assetType[0]">
           {{ assetType[1] }}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
-      <ion-label>{{ addAccountForm.controls.typeChoice.value }}:</ion-label>
-      <ion-select placeholder="Select" formControlName="codeChoice">
+      <ion-label>Current value:</ion-label>
+      <ion-input inputmode="decimal" placeholder="..." class="ion-text-end" formControlName="currentValue"></ion-input>
+      <ion-select [interfaceOptions]="{header: addAccountForm.controls.typeChoice.value}" [selectedText]="'&nbsp;'+addAccountForm.controls.codeChoice.value" class="ion-no-margin" placeholder="Select" formControlName="codeChoice">
         <div
           *ngIf='addAccountForm.controls.typeChoice.value!==undefined && addAccountForm.controls.typeChoice.value!==""'>
           <ion-select-option
@@ -37,10 +38,6 @@
           </ion-select-option>
         </div>
       </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label>Current value:</ion-label>
-      <ion-input placeholder="..." class="ion-text-end" formControlName="currentValue"></ion-input>
     </ion-item>
     <div style="text-align:center;">
       <ion-button type="submit" [disabled]="!addAccountForm.valid">Add</ion-button>
