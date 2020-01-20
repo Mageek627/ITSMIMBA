@@ -19,7 +19,7 @@
     </ion-item>
     <ion-item>
       <ion-label>Type:</ion-label>
-      <ion-select interface="popover" style="max-width: 100%;" formControlName="typeChoice" (ionChange)="changeDefaultCode(n())"
+      <ion-select interface="none" style="max-width: 100%;" formControlName="typeChoice" (ionChange)="changeDefaultCode(n())"
         placeholder="Select">
         <ion-select-option *ngFor="let assetType of Constants.assetTypeFullName" [value]="assetType[0]">
           {{ assetType[1] }}</ion-select-option>
@@ -28,22 +28,24 @@
     <ion-item>
       <ion-label>Current value:</ion-label>
       <ion-input inputmode="decimal" type="number" placeholder="..." class="ion-text-end" formControlName="currentValue"></ion-input>
-      <ionic-selectable (onOpen)="navigationStateService.history.push(null);" (onClose)="navigationStateService.history.pop();" #ionicSelectableComponent [searchFailText]="'No '+Constants.assetTypeFullName[n()][1].toLowerCase()+' found'" (onChange)="cdr.detectChanges()" [items]="ionSelectableOptions"
+      <ionic-selectable (onOpen)="NavStateService.addOverlay(OverlayType.Modal)" (onClose)="NavStateService.dismissHistoryOnly()" #ionicSelectableComponent [searchFailText]="'No '+Constants.assetTypeFullName[n()][1].toLowerCase()+' found'" (onChange)="cdr.detectChanges()" [items]="ionSelectableOptions"
         itemValueField="id" itemTextField="name" formControlName="codeChoice" canSearch="true">
         <ng-template ionicSelectableValueTemplate let-v="value">
           {{ displayText(v.id) }}
         </ng-template>
         <ng-template ionicSelectableHeaderTemplate>
-          <ion-toolbar>
-            <ion-buttons>
-              <ion-button (click)="ionicSelectableComponent.close()">
-                Close
-              </ion-button>
-            </ion-buttons>
-            <ion-title class="centered-title">
-              {{ Constants.assetTypeFullName[n()][1]+':' }}
-            </ion-title>
-          </ion-toolbar>
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-button (click)="ionicSelectableComponent.close()">
+                  Close
+                </ion-button>
+              </ion-buttons>
+              <ion-title class="centered-title">
+                {{ Constants.assetTypeFullName[n()][1]+':' }}
+              </ion-title>
+            </ion-toolbar>
+          </ion-header>
         </ng-template>
       </ionic-selectable>
     </ion-item>

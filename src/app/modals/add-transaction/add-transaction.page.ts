@@ -10,7 +10,7 @@ import { Big } from 'big.js';
 import { Constants } from '../../data/constants';
 import { Account } from '../../models/account';
 import { Transfer } from '../../models/transfer';
-import { NavigationStateService } from '../../providers/navigation-state.service';
+import { NavStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
 import { DateUtils } from '../../utils/date-utils';
 import { LogUtils } from '../../utils/log-utils';
@@ -35,7 +35,7 @@ export class AddTransactionPage implements OnInit {
   constructor(
     private logUtils: LogUtils,
     public userDataService: UserDataService,
-    private navigationStateService: NavigationStateService,
+    private navigationStateService: NavStateService,
     private alertCtrl: AlertController,
     private dateUtils: DateUtils
   ) {
@@ -246,6 +246,6 @@ export class AddTransactionPage implements OnInit {
   }
 
   public async dismissItself(): Promise<void> {
-    await this.navigationStateService.dismissModal();
+    await this.navigationStateService.dismiss();
   }
 }

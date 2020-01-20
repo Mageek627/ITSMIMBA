@@ -36,7 +36,7 @@
       <ion-label slot="start">Repeats:</ion-label>
       <ion-label slot="end">every</ion-label>
       <ion-input inputmode="numeric" type="number" #factorInput class="ion-no-margin ion-text-center" placeholder="..." slot="end" [style.maxWidth]="inputStyle" style="min-width: 25px;--padding-start: 3px; --padding-end:3px;" formControlName="factor"></ion-input>
-      <ion-select [selectedText]="displayValue" class="ion-no-margin" slot="end" placeholder="Select" formControlName="occurrence">
+      <ion-select interface="popover" [selectedText]="displayValue" class="ion-no-margin" slot="end" placeholder="Select" formControlName="occurrence">
         <ion-select-option value="EverySecond">second{{ plural }}</ion-select-option>
         <ion-select-option value="Daily">day{{ plural }}</ion-select-option>
         <ion-select-option value="Weekly">week{{ plural }}</ion-select-option>

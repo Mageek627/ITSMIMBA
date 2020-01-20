@@ -3,7 +3,7 @@ import { Plugins } from '@capacitor/core';
 import { AlertController, IonTextarea } from '@ionic/angular';
 import { UserDataService } from 'src/app/providers/user-data.service';
 import { LogUtils } from 'src/app/utils/log-utils';
-import { NavigationStateService } from '../../providers/navigation-state.service';
+import { NavStateService } from '../../providers/navigation-state.service';
 
 @Component({
   selector: 'app-settings',
@@ -20,7 +20,7 @@ export class SettingsPage {
   public isExporting = false;
 
   constructor(
-    public navigationStateService: NavigationStateService,
+    public navigationStateService: NavStateService,
     private userDataService: UserDataService,
     private logUtils: LogUtils,
     private alertCtrl: AlertController

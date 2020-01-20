@@ -1,9 +1,17 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IonSelect, PopoverController } from '@ionic/angular';
+import { OverlayType } from 'src/app/enums/overlay-type.enum';
 import { GeneralUtils } from 'src/app/utils/general-utils';
 import { Constants } from '../../data/constants';
 import { AssetType } from '../../enums/asset-type.enum';
-import { NavigationStateService } from '../../providers/navigation-state.service';
+import { NavStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
 import { LogUtils } from '../../utils/log-utils';
 import { MathsUtils } from '../../utils/maths-utils';
@@ -20,18 +28,22 @@ class IonSelectableOption {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddAccountPage implements OnInit {
+  @ViewChild(IonSelect, { static: true }) private ionSelect: IonSelect;
   public addAccountForm: FormGroup;
   public toasted = false;
   public Constants = Constants;
   public AssetType = AssetType;
   public ionSelectableOptions: IonSelectableOption[];
   public ionSelectableOption: IonSelectableOption;
+  public NavStateService = NavStateService;
+  public OverlayType = OverlayType;
 
   constructor(
     public userDataService: UserDataService,
-    public navigationStateService: NavigationStateService,
+    public navigationStateService: NavStateService,
     private logUtils: LogUtils,
-    public cdr: ChangeDetectorRef
+    public cdr: ChangeDetectorRef,
+    private popoverCtrl: PopoverController
   ) {
     this.addAccountForm = new FormGroup({
       nameOfAccount: new FormControl('', Validators.required),
@@ -45,6 +57,10 @@ export class AddAccountPage implements OnInit {
         Validators.pattern(Constants.moneyRegex)
       ])
     });
+  }
+
+  public caca() {
+    console.log(2);
   }
 
   public ngOnInit(): void {
@@ -77,7 +93,7 @@ export class AddAccountPage implements OnInit {
         ].assetRef.code,
         a.toString()
       );
-      await this.dismissItself();
+      await this.navigationStateService.dismiss();
       await this.logUtils.toast('Account created successfully');
     } else {
       LogUtils.error('Initial amount is null');
@@ -108,7 +124,7 @@ export class AddAccountPage implements OnInit {
     return this.userDataService.assetCatalogue[this.n()][id].assetRef.code;
   }
 
-  public async dismissItself(): Promise<void> {
-    await this.navigationStateService.dismissModal();
+  public dismissItself(): void {
+    this.navigationStateService.dismiss();
   }
 }

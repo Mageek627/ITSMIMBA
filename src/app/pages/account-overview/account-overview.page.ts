@@ -6,6 +6,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Big } from 'big.js';
+import { OverlayType } from 'src/app/enums/overlay-type.enum';
 import { GeneralUtils } from 'src/app/utils/general-utils';
 import { LogUtils } from 'src/app/utils/log-utils';
 import { MathsUtils } from 'src/app/utils/maths-utils';
@@ -14,7 +15,7 @@ import { AddPaymentPage } from '../../modals/add-payment/add-payment.page';
 import { AddTransactionPage } from '../../modals/add-transaction/add-transaction.page';
 import { Account } from '../../models/account';
 import { Transfer } from '../../models/transfer';
-import { NavigationStateService } from '../../providers/navigation-state.service';
+import { NavStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
 import { DateUtils } from '../../utils/date-utils';
 
@@ -38,12 +39,13 @@ export class AccountOverviewPage {
     private activatedRoute: ActivatedRoute,
     public userDataService: UserDataService,
     private modalCtrl: ModalController,
-    public navigationStateService: NavigationStateService,
+    public navigationStateService: NavStateService,
     private cdr: ChangeDetectorRef,
     private dateUtils: DateUtils,
     public alertCtrl: AlertController,
     private logUtils: LogUtils
   ) {
+    // No need to unsubscribe: https://angular.io/guide/router#observable-parammap-and-component-reuse
     this.activatedRoute.params.subscribe(params => {
       // Getting value from url parameter
       this.accountNumber = Number(params.accountId);
@@ -273,7 +275,7 @@ export class AccountOverviewPage {
       }
     });
     await modal.present();
-    this.navigationStateService.history.push(null);
+    NavStateService.addOverlay(OverlayType.Modal);
     await modal.onWillDismiss();
     this.updateTransfers();
     this.cdr.detectChanges();
@@ -293,7 +295,7 @@ export class AccountOverviewPage {
       }
     });
     await modal.present();
-    this.navigationStateService.history.push(null);
+    NavStateService.addOverlay(OverlayType.Modal);
     await modal.onWillDismiss();
     this.updateTransfers();
     this.cdr.detectChanges();
@@ -306,7 +308,7 @@ export class AccountOverviewPage {
       }
     });
     await modal.present();
-    this.navigationStateService.history.push(null);
+    NavStateService.addOverlay(OverlayType.Modal);
     await modal.onWillDismiss();
     this.updateTransfers();
     this.cdr.detectChanges();

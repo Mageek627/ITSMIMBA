@@ -4,9 +4,10 @@ import {
   Component
 } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { OverlayType } from 'src/app/enums/overlay-type.enum';
 import { AddAccountPage } from '../../modals/add-account/add-account.page';
 import { Account } from '../../models/account';
-import { NavigationStateService } from '../../providers/navigation-state.service';
+import { NavStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
 
 @Component({
@@ -21,7 +22,7 @@ export class AccountsPage {
   constructor(
     private userDataService: UserDataService,
     private modalCtrl: ModalController,
-    public navigationStateService: NavigationStateService,
+    public navigationStateService: NavStateService,
     private cdr: ChangeDetectorRef
   ) {
     this.listAccounts = this.userDataService.accounts;
@@ -33,13 +34,13 @@ export class AccountsPage {
       component: AddAccountPage
     });
     await modal.present();
-    this.navigationStateService.history.push(null);
+    NavStateService.addOverlay(OverlayType.Modal);
     await modal.onWillDismiss();
     this.listAccounts = this.userDataService.accounts;
     this.cdr.detectChanges();
   }
 
   ionViewWillLeave() {
-    this.modalCtrl.dismiss().catch(() => null);
+    this.navigationStateService.leavePage();
   }
 }

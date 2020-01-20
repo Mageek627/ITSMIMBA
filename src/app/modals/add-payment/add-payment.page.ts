@@ -10,7 +10,7 @@ import { Occurrence } from '../../enums/occurrence.enum';
 import { InfiniteRecurringTransfer } from '../../models/infinite-recurring-transfer';
 import { QuantifiedOccurrence } from '../../models/quantified-occurrence';
 import { Transfer } from '../../models/transfer';
-import { NavigationStateService } from '../../providers/navigation-state.service';
+import { NavStateService } from '../../providers/navigation-state.service';
 import { UserDataService } from '../../providers/user-data.service';
 import { DateUtils } from '../../utils/date-utils';
 import { LogUtils } from '../../utils/log-utils';
@@ -32,7 +32,7 @@ export class AddPaymentPage implements OnInit {
 
   constructor(
     private logUtils: LogUtils,
-    private navigationStateService: NavigationStateService,
+    private navigationStateService: NavStateService,
     public userDataService: UserDataService,
     private dateUtils: DateUtils
   ) {
@@ -196,6 +196,6 @@ export class AddPaymentPage implements OnInit {
   }
 
   public async dismissItself(): Promise<void> {
-    await this.navigationStateService.dismissModal();
+    await this.navigationStateService.dismiss();
   }
 }

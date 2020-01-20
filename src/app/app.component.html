@@ -1,6 +1,6 @@
 <ion-app>
-  <ion-menu contentId="main-content" side="end" type="reveal" (ionWillOpen)="menuWillOpen()"
-    (ionWillClose)="menuWillClose()" (ionDidOpen)="menuDidOpen()" (ionDidClose)="menuDidClose()">
+  <div [innerHTML]="NavStateService.loggingResult" style="pointer-events: none;position: absolute; top:0px; left: 0px; color: red; font-size:xx-small; z-index: 99999999;"></div>
+  <ion-menu (ionWillOpen)="NavStateService.addOverlay(OverlayType.Menu)" (ionWillClose)="NavStateService.dismissHistoryOnly()" contentId="main-content" side="end" type="reveal" >
     <ion-header>
       <ion-toolbar>
         <ion-title class="centered-title">Menu</ion-title>

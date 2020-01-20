@@ -9,11 +9,7 @@ import { AppComponent } from './app.component';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    IonicModule.forRoot({ hardwareBackButton: false })
-  ],
+  imports: [BrowserModule, AppRoutingModule, IonicModule.forRoot()],
   providers: [
     DatePipe,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
