@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GeneralUtils } from 'src/app/utils/general-utils';
 import { Constants } from '../../data/constants';
@@ -34,7 +29,7 @@ export class AddAccountPage implements OnInit {
 
   constructor(
     public userDataService: UserDataService,
-    private navigationStateService: NavigationStateService,
+    public navigationStateService: NavigationStateService,
     private logUtils: LogUtils,
     public cdr: ChangeDetectorRef
   ) {

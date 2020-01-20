@@ -37,15 +37,15 @@ export class AddPaymentPage implements OnInit {
     private dateUtils: DateUtils
   ) {
     this.addPaymentForm = new FormGroup({
-      labelOfPayment: new FormControl(''),
-      valueOfPayment: new FormControl('', [
+      labelOfPayment: new FormControl(),
+      valueOfPayment: new FormControl(null, [
         Validators.required,
         Validators.pattern(Constants.moneyRegex)
       ]),
       startDate: new FormControl(new Date().toJSON(), Validators.required),
       occurrence: new FormControl('Monthly', Validators.required),
-      howMany: new FormControl('', [Validators.required, this.howManyTest]),
-      factor: new FormControl('1', [
+      howMany: new FormControl(null, [Validators.required, this.howManyTest]),
+      factor: new FormControl(1, [
         Validators.required,
         MathsUtils.positiveNumberValidator
       ]),
@@ -66,7 +66,7 @@ export class AddPaymentPage implements OnInit {
     this.testSpan.innerText = this.addPaymentForm.controls.factor.value;
     this.inputStyle = this.testSpan.offsetWidth + 16 + 'px';
     const intValue = parseInt(this.addPaymentForm.controls.factor.value, 10);
-    if (this.addPaymentForm.controls.factor.value !== intValue + '') {
+    if (this.addPaymentForm.controls.factor.value === null) {
       this.plural = '';
     } else if (intValue === 1) {
       this.plural = '';
@@ -97,10 +97,7 @@ export class AddPaymentPage implements OnInit {
   }
 
   public howManyTest(c: FormControl): any {
-    if (
-      c.value === '-1' ||
-      (c.value === parseInt(c.value, 10) + '' && parseInt(c.value, 10) > 0)
-    ) {
+    if (c.value === -1 || c.value > 0) {
       return null;
     } else {
       return { howManyTest: { valid: false } };

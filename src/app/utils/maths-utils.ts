@@ -32,7 +32,12 @@ export class MathsUtils {
   }
 
   public static positiveNumberValidator(c: FormControl): any {
-    if (c.value === parseInt(c.value, 10) + '' && parseInt(c.value, 10) > 0) {
+    if (typeof c.value === 'number' && c.value > 0) {
+      return null;
+    } else if (
+      c.value === parseInt(c.value, 10) + '' &&
+      parseInt(c.value, 10) > 0
+    ) {
       return null;
     } else {
       return { positiveNumber: { valid: false } };
