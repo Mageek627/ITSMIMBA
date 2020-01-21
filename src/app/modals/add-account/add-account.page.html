@@ -19,7 +19,7 @@
     </ion-item>
     <ion-item>
       <ion-label>Type:</ion-label>
-      <ion-select interface="none" style="max-width: 100%;" formControlName="typeChoice" (ionChange)="changeDefaultCode(n())"
+      <ion-select interface="popover" style="max-width: 100%;" formControlName="typeChoice" (ionChange)="changeDefaultCode(n())"
         placeholder="Select">
         <ion-select-option *ngFor="let assetType of Constants.assetTypeFullName" [value]="assetType[0]">
           {{ assetType[1] }}</ion-select-option>
@@ -28,7 +28,7 @@
     <ion-item>
       <ion-label>Current value:</ion-label>
       <ion-input inputmode="decimal" type="number" placeholder="..." class="ion-text-end" formControlName="currentValue"></ion-input>
-      <ionic-selectable (onOpen)="NavStateService.addOverlay(OverlayType.Modal)" (onClose)="NavStateService.dismissHistoryOnly()" #ionicSelectableComponent [searchFailText]="'No '+Constants.assetTypeFullName[n()][1].toLowerCase()+' found'" (onChange)="cdr.detectChanges()" [items]="ionSelectableOptions"
+      <ionic-selectable #ionicSelectableComponent [searchFailText]="'No '+Constants.assetTypeFullName[n()][1].toLowerCase()+' found'" (onChange)="cdr.detectChanges()" [items]="ionSelectableOptions"
         itemValueField="id" itemTextField="name" formControlName="codeChoice" canSearch="true">
         <ng-template ionicSelectableValueTemplate let-v="value">
           {{ displayText(v.id) }}

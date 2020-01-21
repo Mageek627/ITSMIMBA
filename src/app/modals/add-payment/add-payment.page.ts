@@ -5,6 +5,7 @@ import {
   OnInit
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ModalController } from '@ionic/angular';
 import { Constants } from '../../data/constants';
 import { Occurrence } from '../../enums/occurrence.enum';
 import { InfiniteRecurringTransfer } from '../../models/infinite-recurring-transfer';
@@ -34,7 +35,8 @@ export class AddPaymentPage implements OnInit {
     private logUtils: LogUtils,
     private navigationStateService: NavStateService,
     public userDataService: UserDataService,
-    private dateUtils: DateUtils
+    private dateUtils: DateUtils,
+    private modalCtrl: ModalController
   ) {
     this.addPaymentForm = new FormGroup({
       labelOfPayment: new FormControl(),
@@ -196,6 +198,6 @@ export class AddPaymentPage implements OnInit {
   }
 
   public async dismissItself(): Promise<void> {
-    await this.navigationStateService.dismiss();
+    await this.modalCtrl.dismiss();
   }
 }

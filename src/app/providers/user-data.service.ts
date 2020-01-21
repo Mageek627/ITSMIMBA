@@ -79,12 +79,10 @@ export class UserDataService {
     n: number
   ): void {
     if (obj.external) {
-      console.log(this.data.user.accountsGraph.accounts[n].externalTransfers);
       this.data.user.accountsGraph.accounts[n].externalTransfers.splice(
         obj.index,
         1
       );
-      console.log(this.data.user.accountsGraph.accounts[n].externalTransfers);
     } else {
       this.data.user.accountsGraph.internalTransfers.splice(obj.index, 1);
     }

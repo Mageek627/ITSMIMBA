@@ -1,12 +1,12 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component
+  Component,
+  ViewRef
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Big } from 'big.js';
-import { OverlayType } from 'src/app/enums/overlay-type.enum';
 import { GeneralUtils } from 'src/app/utils/general-utils';
 import { LogUtils } from 'src/app/utils/log-utils';
 import { MathsUtils } from 'src/app/utils/maths-utils';
@@ -34,6 +34,7 @@ export class AccountOverviewPage {
   public MathsUtils = MathsUtils;
   public currentValue: string;
   private toasted = false;
+  public NavStateService = NavStateService;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -275,10 +276,11 @@ export class AccountOverviewPage {
       }
     });
     await modal.present();
-    NavStateService.addOverlay(OverlayType.Modal);
     await modal.onWillDismiss();
     this.updateTransfers();
-    this.cdr.detectChanges();
+    if (!(this.cdr as ViewRef).destroyed) {
+      this.cdr.detectChanges();
+    }
   }
   public async presentModalModifyTransaction(
     i: number,
@@ -295,10 +297,11 @@ export class AccountOverviewPage {
       }
     });
     await modal.present();
-    NavStateService.addOverlay(OverlayType.Modal);
     await modal.onWillDismiss();
     this.updateTransfers();
-    this.cdr.detectChanges();
+    if (!(this.cdr as ViewRef).destroyed) {
+      this.cdr.detectChanges();
+    }
   }
   public async presentModalPayment(): Promise<void> {
     const modal = await this.modalCtrl.create({
@@ -308,13 +311,10 @@ export class AccountOverviewPage {
       }
     });
     await modal.present();
-    NavStateService.addOverlay(OverlayType.Modal);
     await modal.onWillDismiss();
     this.updateTransfers();
-    this.cdr.detectChanges();
-  }
-
-  ionViewWillLeave() {
-    this.modalCtrl.dismiss().catch(() => null);
+    if (!(this.cdr as ViewRef).destroyed) {
+      this.cdr.detectChanges();
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { Capacitor, Plugins } from '@capacitor/core';
 import {
   ActionSheetController,
@@ -11,12 +11,24 @@ import {
   PickerController,
   PopoverController
 } from '@ionic/angular';
-import { OverlayType } from '../enums/overlay-type.enum';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NavStateService {
+  private static history: string[] = [];
+  public static homeUrl = '/home';
+
+  private ctrls: any[] = [
+    this.modalCtrl,
+    this.actionSheetCtrl,
+    this.popoverCtrl,
+    this.loadingCtrl,
+    this.pickerCtrl,
+    this.alertCtrl
+  ];
+
   private constructor(
     private router: Router,
     private navCtrl: NavController,
@@ -28,133 +40,82 @@ export class NavStateService {
     private pickerCtrl: PickerController,
     private loadingCtrl: LoadingController
   ) {}
-  private static history: (string | null)[] = [];
-  private static overlayTypes: OverlayType[] = [];
-  public static homeUrl = '/home';
-  public static loggingResult = '';
 
-  public static addOverlay(type: OverlayType) {
-    this.history.push(null);
-    this.overlayTypes.push(type);
-    NavStateService.loggingResult +=
-      'End addOverlay:<br />' +
-      JSON.stringify(NavStateService.history) +
-      '<br />' +
-      JSON.stringify(NavStateService.overlayTypes) +
-      '<br />';
+  public static goBackHistoryOnly(): void {
+    const l = NavStateService.history.length;
+    NavStateService.history.splice(l - 2, 2);
   }
 
-  public static dismissHistoryOnly(): void {
-    NavStateService.history.pop();
-    NavStateService.overlayTypes.pop();
-    NavStateService.loggingResult +=
-      'End dismissHistoryOnly:<br />' +
-      JSON.stringify(NavStateService.history) +
-      '<br />' +
-      JSON.stringify(NavStateService.overlayTypes) +
-      '<br />';
-  }
-
-  public initListener(): void {
+  public initListeners(): void {
     if (Capacitor.platform === 'android') {
       Plugins.App.addListener('backButton', () => this.reactBackButton());
     }
-    document.addEventListener('keyup', event => {
-      // Alt+Ctrl+<
-      if (event.altKey && event.ctrlKey && event.keyCode === 188) {
-        this.reactBackButton();
-      }
-    });
+    if (!environment.production) {
+      document.addEventListener('keyup', (e: KeyboardEvent) => {
+        // Simulated back button for testing: Alt + Ctrl + <
+        // tslint:disable-next-line: deprecation
+        if (e.altKey && e.ctrlKey && e.keyCode === 188) {
+          this.reactBackButton();
+        }
+      });
+    }
     // Unsubscription happens (automatically) when the app exits
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        NavStateService.loggingResult +=
-          'Begin NavigationEnd:<br />' +
-          JSON.stringify(NavStateService.history) +
-          '<br />' +
-          JSON.stringify(NavStateService.overlayTypes) +
-          '<br />';
-        this.leavePage();
-        NavStateService.history.push(event.urlAfterRedirects);
-        NavStateService.overlayTypes.push(OverlayType.Page);
-        NavStateService.loggingResult +=
-          'End NavigationEnd:<br />' +
-          JSON.stringify(NavStateService.history) +
-          '<br />' +
-          JSON.stringify(NavStateService.overlayTypes) +
-          '<br />';
+    this.router.events.subscribe((e: RouterEvent) => {
+      if (e instanceof NavigationEnd) {
+        this.dismissAll();
+        NavStateService.history.push(e.urlAfterRedirects);
       }
     });
+    // Insure it doesn't get called more than once
+    this.initListeners = () => {};
   }
 
-  private reactBackButton(): void {
+  private async reactBackButton(): Promise<void> {
+    const overlay = (await this.getAllTop())
+      .map(o => [+o.style.zIndex, o])
+      .sort((a, b) => b[0] - a[0])
+      .shift();
+
+    if (typeof overlay !== 'undefined') {
+      this.dismissOrClose(overlay[1]);
+      return;
+    }
+
     const l = NavStateService.history.length;
     if (l <= 1) {
       Plugins.App.exitApp();
-    } else if (NavStateService.overlayTypes[l - 1] === OverlayType.Page) {
+    } else {
       const url = NavStateService.history[l - 2];
       NavStateService.history.splice(l - 2, 2);
-      NavStateService.overlayTypes.splice(l - 2, 2);
-      this.navCtrl.navigateBack(url as string);
-    } else {
-      this.dismiss();
+      this.navCtrl.navigateBack(url);
     }
   }
 
-  public goBackHistoryOnly(): void {
-    const l = NavStateService.history.length;
-    NavStateService.history.splice(l - 2, 2);
-    NavStateService.overlayTypes.splice(l - 2, 2);
+  private dismissOrClose(o: any): Promise<void> {
+    if (typeof o.close === 'function') {
+      return o.close(); // For menus
+    } else {
+      return o.dismiss();
+    }
+  }
+
+  private async getAllTop(): Promise<any[]> {
+    const promises: Promise<any>[] = this.ctrls.map(v => v.getTop());
+    promises.push(this.menuCtrl.getOpen());
+    const results = await Promise.all(promises);
+    return results.filter(o => typeof o !== 'undefined');
+  }
+
+  private async dismissAll() {
+    const tops = await this.getAllTop();
+    if (tops.length > 0) {
+      await Promise.all(tops.map(top => this.dismissOrClose(top)));
+      this.dismissAll();
+    }
   }
 
   public resetToHomePage(): void {
     NavStateService.history = [];
-    NavStateService.overlayTypes = [];
     this.navCtrl.navigateRoot(NavStateService.homeUrl);
-  }
-
-  public leavePage(): void {
-    let l = NavStateService.history.length;
-    while (NavStateService.history[l - 1] === null) {
-      this.dismiss();
-      l--;
-    }
-  }
-
-  public async dismiss(): Promise<void> {
-    const l = NavStateService.overlayTypes.length;
-    const last = NavStateService.overlayTypes[l - 1];
-    if (last === OverlayType.Menu) {
-      this.menuCtrl.close();
-    } else {
-      NavStateService.overlayTypes.pop();
-      NavStateService.history.pop();
-      switch (last) {
-        case OverlayType.ActionSheet:
-          await this.actionSheetCtrl.dismiss().catch(() => {});
-          break;
-        case OverlayType.Popover:
-          await this.popoverCtrl.dismiss().catch(() => {});
-          break;
-        case OverlayType.Loading:
-          await this.loadingCtrl.dismiss().catch(() => {});
-          break;
-        case OverlayType.Picker:
-          await this.pickerCtrl.dismiss().catch(() => {});
-          break;
-        case OverlayType.Modal:
-          await this.modalCtrl.dismiss().catch(() => {});
-          break;
-        case OverlayType.Alert:
-          await this.alertCtrl.dismiss().catch(() => {});
-          break;
-      }
-    }
-    NavStateService.loggingResult +=
-      'End dismiss:<br />' +
-      JSON.stringify(NavStateService.history) +
-      '<br />' +
-      JSON.stringify(NavStateService.overlayTypes) +
-      '<br />';
   }
 }

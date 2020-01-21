@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Keys } from './data/keys';
 import { OverlayType } from './enums/overlay-type.enum';
 import { NavStateService } from './providers/navigation-state.service';
@@ -8,7 +8,8 @@ import { StorageUtils } from './utils/storage-utils';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+  styleUrls: ['app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
   public NavStateService = NavStateService;
@@ -17,7 +18,7 @@ export class AppComponent {
     private userDataService: UserDataService,
     public navigationStateService: NavStateService
   ) {
-    this.navigationStateService.initListener();
+    this.navigationStateService.initListeners();
     this.initialize();
   }
 

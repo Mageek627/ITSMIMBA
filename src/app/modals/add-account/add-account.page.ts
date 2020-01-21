@@ -6,7 +6,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IonSelect, PopoverController } from '@ionic/angular';
+import { IonSelect, ModalController } from '@ionic/angular';
 import { OverlayType } from 'src/app/enums/overlay-type.enum';
 import { GeneralUtils } from 'src/app/utils/general-utils';
 import { Constants } from '../../data/constants';
@@ -43,7 +43,7 @@ export class AddAccountPage implements OnInit {
     public navigationStateService: NavStateService,
     private logUtils: LogUtils,
     public cdr: ChangeDetectorRef,
-    private popoverCtrl: PopoverController
+    private modalCtrl: ModalController
   ) {
     this.addAccountForm = new FormGroup({
       nameOfAccount: new FormControl('', Validators.required),
@@ -57,10 +57,6 @@ export class AddAccountPage implements OnInit {
         Validators.pattern(Constants.moneyRegex)
       ])
     });
-  }
-
-  public caca() {
-    console.log(2);
   }
 
   public ngOnInit(): void {
@@ -93,7 +89,7 @@ export class AddAccountPage implements OnInit {
         ].assetRef.code,
         a.toString()
       );
-      await this.navigationStateService.dismiss();
+      await this.dismissItself();
       await this.logUtils.toast('Account created successfully');
     } else {
       LogUtils.error('Initial amount is null');
@@ -125,6 +121,6 @@ export class AddAccountPage implements OnInit {
   }
 
   public dismissItself(): void {
-    this.navigationStateService.dismiss();
+    this.modalCtrl.dismiss();
   }
 }

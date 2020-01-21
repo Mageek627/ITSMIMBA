@@ -5,7 +5,7 @@ import {
   OnInit
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Big } from 'big.js';
 import { Constants } from '../../data/constants';
 import { Account } from '../../models/account';
@@ -37,7 +37,8 @@ export class AddTransactionPage implements OnInit {
     public userDataService: UserDataService,
     private navigationStateService: NavStateService,
     private alertCtrl: AlertController,
-    private dateUtils: DateUtils
+    private dateUtils: DateUtils,
+    private modalCtrl: ModalController
   ) {
     this.addTransactionForm = new FormGroup({
       dateOfTransaction: new FormControl(
@@ -195,7 +196,6 @@ export class AddTransactionPage implements OnInit {
     if (this.trxId === -1) {
       this.account.initialAmount = val.toString();
       this.sortedTransfers.splice(0, 1);
-      console.log(this.sortedTransfers);
       for (const t2 of this.sortedTransfers) {
         const actualDate = DateUtils.relevantDate(t2, this.accountNumber);
         if (
@@ -246,6 +246,6 @@ export class AddTransactionPage implements OnInit {
   }
 
   public async dismissItself(): Promise<void> {
-    await this.navigationStateService.dismiss();
+    await this.modalCtrl.dismiss();
   }
 }

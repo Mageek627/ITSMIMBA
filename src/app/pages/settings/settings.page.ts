@@ -13,6 +13,7 @@ import { NavStateService } from '../../providers/navigation-state.service';
 })
 export class SettingsPage {
   @ViewChild('codeTextarea', { static: true }) codeTextarea: IonTextarea;
+  public NavStateService = NavStateService;
 
   public placeholder = '';
   public textareaVisible = false;
