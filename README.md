@@ -57,4 +57,4 @@ Copyright 2019 Alexandre Khoury. This project and all of its files are distribut
 
 ## Author
 
-I'm [Alexandre Khoury](https://www.linkedin.com/in/alexandre-khoury). You can contact me by email at [itsmimba@khouryalexandre.com](mailto:itsmimba@khouryalexandre.com).
+I'm [Alexandre Khoury](https://www.linkedin.com/in/alexandre-khoury).
